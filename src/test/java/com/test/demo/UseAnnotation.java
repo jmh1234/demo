@@ -1,6 +1,7 @@
-package com.test.demo.caseTest.testForAnnotation;
+package com.test.demo;
 
-import org.junit.Test;
+import com.test.demo.caseTest.testForAnnotation.AnnotationTest;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class UseAnnotation {
     @Test
     @AnnotationTest(id = "47")
     @AnnotationTest(id = "48", description = "Passwords must contain at least one numeric")
-    public void trackUseAnn() {
+    public void test() {
         List<Integer> caseGather = new ArrayList<>();
         Collections.addAll(caseGather, 47, 48, 49, 50);
         try {

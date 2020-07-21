@@ -11,7 +11,7 @@ public class ForkJoinTest extends RecursiveTask<Long> {
     // 临界值，说明每个小任务最多累加10000个数
     private static final long THRESHOLD = 10000;
 
-    ForkJoinTest(long start, long end) {
+    public ForkJoinTest(long start, long end) {
         this.start = start;
         this.end = end;
     }

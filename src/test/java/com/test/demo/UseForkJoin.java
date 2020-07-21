@@ -1,6 +1,8 @@
-package com.test.demo.caseTest.forkJoinTest;
+package com.test.demo;
 
-import org.junit.Test;
+import com.github.blindpirate.extensions.CaptureSystemOutput;
+import com.test.demo.caseTest.forkJoinTest.ForkJoinTest;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -10,7 +12,8 @@ import java.util.stream.LongStream;
 
 public class UseForkJoin {
     @Test
-    public void test1() {
+    @CaptureSystemOutput
+    public void testOne() {
         long sum = 0L;
         Instant start = Instant.now();
         for (long i = 0; i <= 100000000000L; i++) {
@@ -26,7 +29,7 @@ public class UseForkJoin {
      * ForkJoin框架
      */
     @Test
-    public void test2() {
+    public void testTwo() {
         Instant start = Instant.now();
         ForkJoinPool pool = new ForkJoinPool();
         // ForkJoinTask代表一个可以并行、合并的任务。ForkJoinTask是一个抽象类
@@ -41,7 +44,7 @@ public class UseForkJoin {
     }
 
     @Test
-    public void test3() {
+    public void testThree() {
         Instant start = Instant.now();
         //底层就是forkjoin
         long sum = LongStream.rangeClosed(0, 100000000000L)
