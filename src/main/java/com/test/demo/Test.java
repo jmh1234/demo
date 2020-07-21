@@ -43,9 +43,7 @@ public class Test {
 
         List<User> users = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            User user = new User();
-            user.setId(i);
-            user.setName("王" + i);
+            User user = new User(i, "王" + i);
             users.add(user);
         }
 
@@ -62,11 +60,7 @@ class User {
     private int id;
     private String name;
 
-    public User() {
-
-    }
-
-    public User(int id, String name) {
+    User(int id, String name) {
         this.id = id;
         this.name = name;
     }

@@ -40,7 +40,7 @@ public class UseForkJoin {
         System.out.println(sum);
         Instant end = Instant.now();
         //如果数值过小，拆分需要时间，效率就会比for循环还要低
-        System.out.println("耗费时间为：" + Duration.between(start, end).toMillis());  //18520
+        System.out.println("耗费时间为：" + Duration.between(start, end).toMillis());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class UseForkJoin {
                 .parallel()  // 并行流，若顺序流则为sequential()
                 .reduce(0, Long::sum);
         Instant end = Instant.now();
-        System.out.println(sum);//932356074711512064
-        System.out.println("耗费时间为：" + Duration.between(start, end).toMillis());// 12251
+        System.out.println(sum);
+        System.out.println("耗费时间为：" + Duration.between(start, end).toMillis());
     }
 }

@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class LoggerUtil {
-    private volatile static Logger logger = null;
+    private static volatile Logger logger = null;
 
     private LoggerUtil() {
     }

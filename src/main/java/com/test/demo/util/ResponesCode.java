@@ -13,7 +13,7 @@ public class ResponesCode {
 
     private Boolean status;
 
-    private Map<String,Boolean> authorities;
+    private Map<String, Boolean> authorities;
 
     public int getCode() {
         return code;
@@ -47,11 +47,11 @@ public class ResponesCode {
         this.status = status;
     }
 
-    public Map<String,Boolean> getAuthorities() {
+    public Map<String, Boolean> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Map<String,Boolean> authorities) {
+    public void setAuthorities(Map<String, Boolean> authorities) {
         this.authorities = authorities;
     }
 }

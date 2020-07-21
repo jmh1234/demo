@@ -52,7 +52,7 @@ public class RespJson implements java.io.Serializable {
      * 将传递过来的base64参数转jsonObject
      *
      * @param req
-     * @return
+     * @return RespJson
      */
     public static RespJson convertJson(HttpServletRequest req) {
         RespJson json = new RespJson();

@@ -8,11 +8,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -40,48 +35,13 @@ public class FileUtil {
         }
     }
 
-    public static String readToString(String filePath) throws Exception {
-        File file = new File(filePath);
-        if (!file.exists()) return null;
-        ExecutorService threadPool = Executors.newFixedThreadPool(10);
-        // 读取文件
-        final BufferedReader reader = new BufferedReader(new FileReader(file));
-        // 任务结束返回结果的集合
-        List<Future<String>> totalResult = new ArrayList<>();
-        // 最后返回的集合
-        List<String> finalResult = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            final int id = i;
-            // 一个线程读取一行文字
-            Future<String> singleResult = threadPool.submit(new Callable<String>() {
-                @Override
-                public String call() throws Exception {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-//                        System.out.println(Thread.currentThread().getName() + " ：" + id + " ：" + line);
-//                        System.out.println(line);
-                    }
-                    return line;
-                }
-            });
-            totalResult.add(singleResult);
-        }
-
-        for (Future<String> future : totalResult) {
-            // 把每一个future对象里的map集合合并到 finalResult
-            if (future.get() != null) finalResult.add(future.get());
-        }
-
-        threadPool.shutdown();
-        return finalResult.stream().collect(Collectors.joining("\n"));
-    }
-
     // 获取程序所在目录
     public static String getProgramDirPath() {
         URL url = FileUtil.class.getProtectionDomain().getCodeSource().getLocation();
         String filePath = null;
         try {
-            filePath = URLDecoder.decode(url.getPath(), "utf-8");// 转化为utf-8编码
+            // 转化为utf-8编码
+            filePath = URLDecoder.decode(url.getPath(), "utf-8");
         } catch (Exception e) {
             // !! do not use : MyLog.logger.error(e.getMessage(),e);
             e.printStackTrace();
@@ -94,7 +54,8 @@ public class FileUtil {
         }
 
         File file = new File(filePath);
-        filePath = file.getAbsolutePath();//得到windows下的正确路径
+        //得到windows下的正确路径
+        filePath = file.getAbsolutePath();
         return filePath;
     }
 
@@ -109,6 +70,7 @@ public class FileUtil {
      *
      * @param out_path
      * @param content
+     * @param append
      */
     public static void WriteFile(String out_path, String content, boolean append) {
         PrintWriter pfp = null;
@@ -360,18 +322,20 @@ public class FileUtil {
     }
 
     public static void copyFile2Target(String path, String outPath) throws Exception {
-        File afile = new File(path);
-        File bfile = new File(outPath);//定义一个复制后的文件路径
-        bfile.createNewFile();//新建文件
-        FileInputStream c = new FileInputStream(afile);//定义FileInputStream对象
-        FileOutputStream d = new FileOutputStream(bfile);//定义FileOutputStream对象
-        byte[] bytes = new byte[1024];//定义一个byte数组
         int i = 0;
-        while ((i = c.read(bytes)) > -1) {//判断有没有读取到文件末尾
-            d.write(bytes, 0, i);//写数据
+        byte[] bytes = new byte[1024];
+
+        File bfile = new File(outPath);
+        bfile.createNewFile();
+        FileOutputStream d = new FileOutputStream(bfile);
+
+        File afile = new File(path);
+        FileInputStream c = new FileInputStream(afile);
+        while ((i = c.read(bytes)) > -1) {
+            d.write(bytes, 0, i);
         }
-        c.close();//关闭流
-        d.close();//关闭流
+        c.close();
+        d.close();
     }
 
     public static void isChartPathExist(String dirPath, String type) throws Exception {
@@ -423,8 +387,10 @@ public class FileUtil {
                 }
             }
             if (temp.isDirectory()) {
-                delAllFile(path + "/" + tempFile);// 先删除文件夹里面的文件
-                delFolder(path + "/" + tempFile);// 再删除空文件夹
+                // 先删除文件夹里面的文件
+                delAllFile(path + "/" + tempFile);
+                // 再删除空文件夹
+                delFolder(path + "/" + tempFile);
             }
         }
     }
@@ -435,11 +401,11 @@ public class FileUtil {
      * @param folderPath 文件夹完整绝对路径
      */
     private static void delFolder(String folderPath) {
-        delAllFile(folderPath); // 删除完里面所有内容
+        delAllFile(folderPath);
         String filePath = folderPath;
         filePath = filePath.toString();
         File myFilePath = new File(filePath);
-        myFilePath.delete(); // 删除空文件夹
+        myFilePath.delete();
     }
 
     public static void copyDir(String sourcePath, String newPath) {
@@ -466,8 +432,9 @@ public class FileUtil {
         ZipEntry zipEntry;
         String str = "";
         File file = new File(path);
-        if (file.exists()) { //判断文件是否存在
-            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(path), Charset.forName("GBK")); //解决包内文件存在中文时的中文乱码问题
+        if (file.exists()) {
+            //解决包内文件存在中文时的中文乱码问题
+            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(path), Charset.forName("GBK"));
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 if (zipEntry.isDirectory()) { //遇到文件夹就跳过
                     return zipEntry.getName().split("/")[0];

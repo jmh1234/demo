@@ -3,17 +3,17 @@ package com.test.demo.util;
 @SuppressWarnings("all")
 public class ResultCode {
     /**
-     * 1000	ERROR	错误
-     * 1001	USER_NOT_EXIST	用户不存在
-     * 1002	USER_NAME_EXIST	登录用户名已经被使用
-     * 1003	USER_PWD_ERROR	密码错误！
-     * 1004	USER_ALREADY_DEL	用户已被删除！
-     * 1005	CHECK_NO_RECORD	查询无此记录
-     * 1006	TOKEN_NOT_EXIST	用户TOKEN不存在
-     * 1007	TOKEN_ALREADY_EXPIRE
-     * 1008    NICK_NAME_EXIST 用户昵称已经被使用
-     * 1009    USER_NAME_LENGTH 用户名称长度
-     * 1010    ERROR_PARAM 参数错误
+     * 1000 ERROR 错误
+     * 1001 USER_NOT_EXIST 用户不存在
+     * 1002 USER_NAME_EXIST 登录用户名已经被使用
+     * 1003 USER_PWD_ERROR 密码错误！
+     * 1004 USER_ALREADY_DEL 用户已被删除！
+     * 1005 CHECK_NO_RECORD 查询无此记录
+     * 1006 TOKEN_NOT_EXIST 用户TOKEN不存在
+     * 1007 TOKEN_ALREADY_EXPIRE
+     * 1008 NICK_NAME_EXIST 用户昵称已经被使用
+     * 1009 USER_NAME_LENGTH 用户名称长度
+     * 1010 ERROR_PARAM 参数错误
      */
     public static String USER_LOGIN_INFO = "USER_LOGIN_INFO";
     public static String ADMIN_LOGIN_INFO = "user";
