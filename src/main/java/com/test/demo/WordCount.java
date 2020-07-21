@@ -50,7 +50,9 @@ public class WordCount {
                         String[] words = line.split(" ");
                         // 把每个单词存到map里
                         for (String word : words) {
-                            if (word.matches("[/(^bai[\\-0-9][0-9]]")) continue;
+                            if (word.matches("[/(^bai[\\-0-9][0-9]]")) {
+                                continue;
+                            }
                             result.put(word, result.getOrDefault(word, 0) + 1);
                         }
                     }

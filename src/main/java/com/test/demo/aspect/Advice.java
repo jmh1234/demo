@@ -56,16 +56,18 @@ public class Advice {
         try {
             // 获取注解方法的反射
             Signature sig = process.getSignature();
-            if (!(sig instanceof MethodSignature))
+            if (!(sig instanceof MethodSignature)) {
                 throw new IllegalArgumentException("该注解只能用于方法!");
+            }
             MethodSignature sigMethod = (MethodSignature) sig;
             Object target = process.getTarget();
             Method method = target.getClass().getMethod(sigMethod.getName(), sigMethod.getParameterTypes());
 
             // 获取 注解中的参数 只适用于不重复注解
             AdviceAspect annotation = method.getDeclaredAnnotationsByType(AdviceAspect.class)[0];
-            if (annotation != null)
+            if (annotation != null) {
                 logger.info("注解传入的参数为: " + annotation.description());
+            }
 
             // 注入通知 标志方法执行状态
             logger.info("方法 " + methodName + " 开始执行!");

@@ -15,8 +15,9 @@ public class LoggerUtil {
     public static Logger getInstance(Class<?> clazz) {
         if (logger == null) {
             synchronized (LoggerUtil.class) {
-                if (logger == null)
+                if (logger == null) {
                     logger = LoggerFactory.getLogger(clazz);
+                }
             }
         }
         return logger;

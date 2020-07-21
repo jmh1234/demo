@@ -21,7 +21,9 @@ public class FileUtil {
 
     public static String readToString(String filePath, String encoding) {
         File file = new File(filePath);
-        if (!file.exists()) return null;
+        if (!file.exists()) {
+            return null;
+        }
         Long fileLength = file.length();
         byte[] fileContent = new byte[fileLength.intValue()];
         try {
@@ -61,8 +63,7 @@ public class FileUtil {
 
     public static boolean checkExistAndAbord(String name) {
         File f = new File(name);
-        if (!f.exists()) return false;
-        else return true;
+        return f.exists();
     }
 
     /**
@@ -76,7 +77,9 @@ public class FileUtil {
         PrintWriter pfp = null;
         try {
             File f = new File(out_path);
-            if (!f.exists()) f.createNewFile();
+            if (!f.exists()) {
+                f.createNewFile();
+            }
             FileWriter fw = new FileWriter(f, append);
             BufferedWriter bw = new BufferedWriter(fw);
             pfp = new PrintWriter(bw);
@@ -94,7 +97,9 @@ public class FileUtil {
             File file = new File(path);
             if (!file.exists()) {
                 file = new File(file.getParent());
-                if (!file.exists()) file.mkdirs();
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
             }
             osw = new OutputStreamWriter(new FileOutputStream(path), encoding);
             osw.write(content);
@@ -103,7 +108,9 @@ public class FileUtil {
             e.printStackTrace();
         } finally {
             try {
-                if (osw != null) osw.close();
+                if (osw != null) {
+                    osw.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -111,8 +118,9 @@ public class FileUtil {
     }
 
     public static String formatJson(String jsonStr) {
-        if (null == jsonStr || "".equals(jsonStr))
+        if (null == jsonStr || "".equals(jsonStr)) {
             return "";
+        }
         StringBuilder sb = new StringBuilder();
         char last = '\0';
         char current = '\0';
@@ -296,7 +304,9 @@ public class FileUtil {
         List<String> fileNameList = new ArrayList<>();
         File file = new File(path);
         File[] array = file.listFiles();
-        if (array == null) return null;
+        if (array == null) {
+            return null;
+        }
         for (int i = 0; i < array.length; i++) {
             if (array[i].isFile()) {
                 fileNameList.add(array[i].getName());
@@ -362,10 +372,14 @@ public class FileUtil {
             logger.warn(path + "文件不存在，已创建！");
             return;
         }
-        if (!file.isDirectory()) return;
+        if (!file.isDirectory()) {
+            return;
+        }
         String[] tempList = file.list();
         File temp;
-        if (tempList == null) return;
+        if (tempList == null) {
+            return;
+        }
         for (String tempFile : tempList) {
             if (path.endsWith(File.separator)) {
                 temp = new File(path + tempFile);
@@ -415,7 +429,9 @@ public class FileUtil {
         if (!(new File(newPath)).exists()) {
             (new File(newPath)).mkdir();
         }
-        if (filePath == null) return;
+        if (filePath == null) {
+            return;
+        }
         for (int i = 0; i < filePath.length; i++) {
             if ((new File(sourcePath + file.separator + filePath[i])).isDirectory()) {
                 copyDir(sourcePath + file.separator + filePath[i], newPath + file.separator + filePath[i]);

@@ -125,9 +125,13 @@ public class Test1 {
         // 在collect方法中传入groupingBy进行分组，其中groupingBy的方法参数为分类函数。还可以通过嵌套使用groupingBy进行多级分类
         System.out.println("---------------通过嵌套使用groupingBy进行多级分类------------------");
         Map<String, List<Dish>> result2 = getData().stream().collect(groupingBy(Dish -> {
-            if (Dish.getCalories() <= 400) return "400";
-            else if (Dish.getCalories() <= 700) return "700";
-            else return "other";
+            if (Dish.getCalories() <= 400) {
+                return "400";
+            } else if (Dish.getCalories() <= 700) {
+                return "700";
+            } else {
+                return "other";
+            }
         }));
         System.out.println(result2);
 
