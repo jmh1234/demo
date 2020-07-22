@@ -1,4 +1,4 @@
-package com.test.demo;
+package com.test.demo.caseTest.thread;
 
 public class BOSS {
     public static void main(String[] args) throws InterruptedException {

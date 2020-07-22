@@ -1,10 +1,13 @@
-package com.test.demo;
+package com.test.demo.caseTest.thread;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class WordCount {
@@ -50,9 +53,6 @@ public class WordCount {
                         String[] words = line.split(" ");
                         // 把每个单词存到map里
                         for (String word : words) {
-                            if (word.matches("[/(^bai[\\-0-9][0-9]]")) {
-                                continue;
-                            }
                             result.put(word, result.getOrDefault(word, 0) + 1);
                         }
                     }
