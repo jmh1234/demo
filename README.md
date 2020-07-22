@@ -1,3 +1,11 @@
 # demo
 
-## 先随便写一下吧，我也不知道要干啊
+## 数据库连接信息
+
+```yml
+
+name：test
+username：root
+password：fnst-3d3k
+
+```
