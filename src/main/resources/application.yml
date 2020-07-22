@@ -4,7 +4,7 @@ server:
 spring:
  datasource:
    name: test
-   url: jdbc:mysql://localhost:3306/test_boot?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
+   url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
    username: root
    password: fnst-3d3k
    type: com.alibaba.druid.pool.DruidDataSource
