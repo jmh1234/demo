@@ -1,4 +1,4 @@
-package com.test.demo.caseTest.NewAttrsInJDK;
+package com.test.demo.caseTest.newAttrsInJDK;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

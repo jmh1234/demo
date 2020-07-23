@@ -1,4 +1,4 @@
-package com.test.demo.caseTest.NewAttrsInJDK;
+package com.test.demo.caseTest.newAttrsInJDK;
 
 public class Optional {
     public static void main(String[] args) {
