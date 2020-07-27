@@ -4,7 +4,7 @@
 
 ```yml
 
-name：test
+dataname：test
 username：root
 password：fnst-3d3k
 
