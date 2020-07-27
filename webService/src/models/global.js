@@ -1,4 +1,4 @@
-import { queryNotices } from '../services/api';
+import {queryNotices} from '../services/api';
 
 export default {
   namespace: 'global',
@@ -6,12 +6,11 @@ export default {
   state: {
     collapsed: false,
     notices: [],
-
     authorities: {}, // 权限
   },
 
   effects: {
-    *fetchNotices(_, { call, put }) {
+    * fetchNotices(_, {call, put}) {
       const data = yield call(queryNotices);
       yield put({
         type: 'saveNotices',
@@ -22,7 +21,7 @@ export default {
         payload: data.length,
       });
     },
-    *clearNotices({ payload }, { put, select }) {
+    * clearNotices({payload}, {put, select}) {
       yield put({
         type: 'saveClearedNotices',
         payload,
@@ -36,26 +35,26 @@ export default {
   },
 
   reducers: {
-    changeLayoutCollapsed(state, { payload }) {
+    changeLayoutCollapsed(state, {payload}) {
       return {
         ...state,
         collapsed: payload,
       };
     },
-    saveNotices(state, { payload }) {
+    saveNotices(state, {payload}) {
       return {
         ...state,
         notices: payload,
       };
     },
-    saveClearedNotices(state, { payload }) {
+    saveClearedNotices(state, {payload}) {
       return {
         ...state,
         notices: state.notices.filter(item => item.type !== payload),
       };
     },
 
-    putAuthorities(state, { payload }) {
+    putAuthorities(state, {payload}) {
       return {
         ...state,
         authorities: payload,
@@ -65,9 +64,9 @@ export default {
   },
 
   subscriptions: {
-    setup({ history }) {
+    setup({history}) {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
-      return history.listen(({ pathname, search }) => {
+      return history.listen(({pathname, search}) => {
         if (typeof window.ga !== 'undefined') {
           window.ga('send', 'pageview', pathname + search);
         }
