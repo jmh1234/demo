@@ -25,6 +25,7 @@ public class MyClassLoader extends ClassLoader {
     // 请思考：双亲委派加载模型在哪儿？为什么我们没有处理？
     // 扩展阅读：ClassLoader类的Javadoc文档
     @Override
+    @SuppressWarnings("all")
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         String fileName = bytecodeFileDirectory.getAbsolutePath() + "\\" + name + ".class";
         File file = new File(fileName);
@@ -35,8 +36,7 @@ public class MyClassLoader extends ClassLoader {
             Long length = file.length();
             byte[] bytes = new byte[length.intValue()];
             FileInputStream in = new FileInputStream(fileName);
-            int read = in.read(bytes);
-            System.out.println(read);
+            in.read(bytes);
             return defineClass("com.test.demo." + name, bytes, 0, bytes.length);
         } catch (Exception e) {
             e.printStackTrace();

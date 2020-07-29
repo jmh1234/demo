@@ -2,6 +2,9 @@ package com.test.demo.caseTest.reflect;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,17 +19,37 @@ public class MapBeanConverter {
     private static Map<String, Object> beanToMap(Object bean) {
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("id", PropertyUtils.getProperty(bean, "id"));
-            map.put("name", PropertyUtils.getProperty(bean, "name"));
-            map.put("longName", PropertyUtils.getProperty(bean, "longName"));
-           /* Class<?> clazz = bean.getClass();
-            map.put("id", clazz.getMethod("getId").invoke(bean));
-            map.put("name", clazz.getMethod("getName").invoke(bean));
-            map.put("longName", clazz.getMethod("isLongName").invoke(bean));*/
+            Class<?> clazz = bean.getClass();
+            Method[] declaredMethods = clazz.getDeclaredMethods();
+            Arrays.stream(declaredMethods)
+                    .filter(method -> (method.getName().startsWith("get") || method.getName().startsWith("is")) && method.getParameterCount() == 0)
+                    .forEach(method -> {
+                        try {
+//                            Object invoke = method.invoke(bean);
+//                            if (invoke != null && invoke != ""
+//                                    && !(method.getName().startsWith("is") && !(invoke instanceof Boolean))) {
+//                                map.put(getKeyByGetter(method), invoke);
+//                            }
+                            map.put(getKeyByGetter(method), PropertyUtils.getProperty(bean, getKeyByGetter(method)));
+                        } catch (Exception e) {
+                            System.out.println("错误key：" + getKeyByGetter(method));
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }
         return map;
+    }
+
+    private static String getKeyByGetter(Method method) {
+        String replace = method.getName()
+                .replace("get", "")
+                .replace("is", "");
+        if ("".equals(replace)) return method.getName();
+        StringBuilder sb = new StringBuilder(replace);
+        char c = (char) (replace.charAt(0) + 32);
+        sb.deleteCharAt(0).insert(0, c);
+        return sb.toString();
     }
 
     // 传入一个遵守Java Bean约定的Class和一个Map，生成一个该对象的实例
@@ -40,13 +63,12 @@ public class MapBeanConverter {
         DemoJavaBean demoJavaBean = null;
         try {
             demoJavaBean = (DemoJavaBean) klass.newInstance();
-            PropertyUtils.setSimpleProperty(demoJavaBean, "id", map.get("id"));
-            PropertyUtils.setSimpleProperty(demoJavaBean, "name", map.get("name"));
-
-//            demoJavaBean = (DemoJavaBean) klass.newInstance();
 //            demoJavaBean.setId(Integer.valueOf(map.get("id").toString()));
 //            demoJavaBean.setName(map.get("name").toString());
-        } catch (Exception e) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                PropertyUtils.setProperty(demoJavaBean, entry.getKey(), entry.getValue());
+            }
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return demoJavaBean;
@@ -64,13 +86,13 @@ public class MapBeanConverter {
         System.out.println(mapToBean(DemoJavaBean.class, map));
     }
 
+    @SuppressWarnings("unused")
     public static class DemoJavaBean {
         private Integer id;
         private String name;
         private String privateField = "privateField";
 
         public int isolate() {
-            System.out.println(privateField);
             return 0;
         }
 
@@ -98,7 +120,7 @@ public class MapBeanConverter {
             this.name = name;
         }
 
-        public boolean isLongName() {
+        private boolean isLongName() {
             return name.length() > 10;
         }
 
