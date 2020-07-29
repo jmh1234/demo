@@ -45,7 +45,9 @@ public class MapBeanConverter {
         String replace = method.getName()
                 .replace("get", "")
                 .replace("is", "");
-        if ("".equals(replace)) return method.getName();
+        if ("".equals(replace)) {
+            return method.getName();
+        }
         StringBuilder sb = new StringBuilder(replace);
         char c = (char) (replace.charAt(0) + 32);
         sb.deleteCharAt(0).insert(0, c);
