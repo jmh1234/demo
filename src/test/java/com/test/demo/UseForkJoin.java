@@ -1,6 +1,5 @@
 package com.test.demo;
 
-import com.github.blindpirate.extensions.CaptureSystemOutput;
 import com.test.demo.caseTest.forkJoinTest.ForkJoinTest;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +11,6 @@ import java.util.stream.LongStream;
 
 public class UseForkJoin {
     @Test
-    @CaptureSystemOutput
     public void testOne() {
         long sum = 0L;
         Instant start = Instant.now();

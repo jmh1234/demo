@@ -29,9 +29,7 @@ public class MyClassLoader extends ClassLoader {
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         String fileName = bytecodeFileDirectory.getAbsolutePath() + "\\" + name + ".class";
         File file = new File(fileName);
-        if (!file.exists()) {
-            throw new ClassNotFoundException(name);
-        }
+        if (!file.exists()) throw new ClassNotFoundException(name);
         try {
             Long length = file.length();
             byte[] bytes = new byte[length.intValue()];

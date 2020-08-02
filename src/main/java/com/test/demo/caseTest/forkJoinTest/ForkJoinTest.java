@@ -23,7 +23,6 @@ public class ForkJoinTest extends RecursiveTask<Long> {
         // 如果任务足够小就计算任务
         if (length <= THRESHOLD) {
             long sum = 0;
-
             for (long i = start; i <= end; i++) {  //到达临界值进行+操作
                 sum += i;
             }
@@ -31,7 +30,6 @@ public class ForkJoinTest extends RecursiveTask<Long> {
         } else {
             // 如果任务大于阈值，就分裂成两个子任务计算
             long mid = (start + end) / 2;
-
             ForkJoinTest left = new ForkJoinTest(start, mid);
             ForkJoinTest right = new ForkJoinTest(mid + 1, end);
 

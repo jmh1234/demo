@@ -20,7 +20,6 @@ public class NewTimeAPI {
         LocalDate date1 = currentTime.toLocalDate();
         System.out.println("date1: " + date1);
 
-
         int month = currentTime.getMonthValue();
         int day = currentTime.getDayOfMonth();
         int seconds = currentTime.getSecond();

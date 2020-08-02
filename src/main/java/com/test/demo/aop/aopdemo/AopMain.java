@@ -24,11 +24,7 @@ public class AopMain {
 
         SPAService spa = (SPAService) ioc.getBean("spa");
         spa.aromaOilMessage("mike");
-        System.out.println();
-
         spa.rest();
-        System.out.println();
-
         KtvService ktv = (KtvService) ioc.getBean("ktv");
         ktv.momoSingMessage("mike");
     }
