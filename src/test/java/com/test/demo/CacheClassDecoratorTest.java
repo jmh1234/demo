@@ -15,8 +15,7 @@ public class CacheClassDecoratorTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        testDataService =
-                CacheClassDecorator.decorate(TestDataService.class).getConstructor().newInstance();
+        testDataService = CacheClassDecorator.getInstance(TestDataService.class);
     }
 
     @Test

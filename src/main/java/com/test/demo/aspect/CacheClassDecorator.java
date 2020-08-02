@@ -14,8 +14,13 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheClassDecorator {
+
+    public static <T> T getInstance(Class<T> clazz) throws Exception {
+        return decorate(clazz).getConstructor().newInstance();
+    }
+
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> decorate(Class<T> clazz) {
+    private static <T> Class<T> decorate(Class<T> clazz) {
         return (Class<T>) new ByteBuddy().subclass(clazz)
                 .method(ElementMatchers.isAnnotatedWith(Cache.class))
                 .intercept(MethodDelegation.to(CacheInterceptor.class))

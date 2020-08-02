@@ -10,8 +10,8 @@ import net.bytebuddy.matcher.ElementMatchers;
 import java.util.concurrent.Callable;
 
 public class AdviceByEnhance {
-    public static <T> T getInstance(Class<T> clazz) throws IllegalAccessException, InstantiationException {
-        return enhanceByAnnotation(clazz).newInstance();
+    public static <T> T getInstance(Class<T> clazz) throws Exception {
+        return enhanceByAnnotation(clazz).getConstructor().newInstance();
     }
 
     private static <T> Class<? extends T> enhanceByAnnotation(Class<T> clazz) {
