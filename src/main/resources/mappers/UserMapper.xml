@@ -5,5 +5,7 @@
         SELECT * FROM USER
         WHERE 1 = 1
         <if test="id != null">and id = #{id}</if>
+        <if test="tel != null">and tel = #{tel}</if>
+        <if test="address != null">and address = #{address}</if>
     </select>
 </mapper>
