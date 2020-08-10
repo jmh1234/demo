@@ -1,14 +1,15 @@
 package com.test.demo.service.Impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.test.demo.dao.UserDao;
 import com.test.demo.domain.User;
 import com.test.demo.service.UserService;
-import com.test.demo.util.LoggerUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.test.demo.util.Pagination;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -16,15 +17,11 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
-    private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
-    public User getUserById(String paramsList) {
-        User user = null;
-        try {
-            user = userDao.selectByPrimaryKey(paramsList);
-        } catch (Exception e) {
-            logger.error(LoggerUtil.handleException(e));
-        }
-        return user;
+    public Pagination<User> getUserById(User user, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> usersList = userDao.selectByPrimaryKey(user);
+        int total = (int) ((Page) usersList).getTotal();
+        Integer totalPage = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
+        return Pagination.pageOf(usersList, pageSize, pageNum, totalPage);
     }
 }

@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.test.demo.dao.UserDao">
-    <resultMap id="BaseResultMap" type="com.test.demo.domain.User">
-        <id column="ID" property="id" jdbcType="INTEGER"/>
-        <id column="NAME" property="name" jdbcType="VARCHAR"/>
-        <id column="TEL" property="tel" jdbcType="VARCHAR"/>
-        <id column="ADDRESS" property="address" jdbcType="VARCHAR"/>
-        <id column="CREATED_AT" property="createTime" jdbcType="TIMESTAMP"/>
-        <id column="UPDATED_AT" property="updateTime" jdbcType="TIMESTAMP"/>
-        <id column="STATUS" property="status" jdbcType="TINYINT"/>
-        <result column="USERNAME" property="username" jdbcType="VARCHAR"/>
-        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
-        <result column="AGE" property="age" jdbcType="INTEGER"/>
-    </resultMap>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
-        SELECT
-            t.ID,
-            t.NAME,
-            t.ADDRESS,
-            t.CREATED_AT,
-            t.UPDATED_AT,
-            t.STATUS,
-            t.USERNAME,
-            t.PASSWORD,
-            t.AGE
-        FROM user t
-        WHERE t.ID = #{id}
+    <select id="selectByPrimaryKey" parameterType="com.test.demo.domain.User" resultType="com.test.demo.domain.User">
+        SELECT * FROM USER
+        WHERE 1 = 1
+        <if test="id != null">and id = #{id}</if>
     </select>
 </mapper>

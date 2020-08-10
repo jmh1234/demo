@@ -3,8 +3,9 @@ package com.test.demo.dao;
 import com.test.demo.domain.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserDao {
-
-    User selectByPrimaryKey(String paramsList);
+    List<User> selectByPrimaryKey(User user);
 }

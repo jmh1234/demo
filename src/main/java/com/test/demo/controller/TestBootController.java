@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @RestController
 public class TestBootController {
@@ -33,8 +34,13 @@ public class TestBootController {
     @AdviceAspect(description = "我只是想获得用户的信息")
     public RespJson showUserInfo(HttpServletRequest request) {
         try {
-            User user = userService.getUserById(request.getParameter("id"));
-            return new RespJson(true, "获取用户信息成功!", ResultCode.SUCCESS, user);
+            String id = request.getParameter("id");
+            String tel = request.getParameter("tel");
+            String address = request.getParameter("address");
+            User user = new User(id, tel, address);
+            Map<String, Integer> pageNumAndPageSize = Utils.getPageNumAndPageSize(request);
+            Pagination<User> userInfoList = userService.getUserById(user, pageNumAndPageSize.get("pageNum"), pageNumAndPageSize.get("pageSize"));
+            return new RespJson(true, "获取用户信息成功!", ResultCode.SUCCESS, userInfoList);
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
             return new RespJson(false, "执行操作失败!", ResultCode.ERROR, null);

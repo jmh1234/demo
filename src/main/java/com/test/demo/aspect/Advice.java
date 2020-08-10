@@ -45,7 +45,7 @@ public class Advice {
             Object arg = args[0];
             if (arg instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) arg;
-                if (!"1".equals(request.getParameter("id"))) {
+                if ("2".equals(request.getParameter("id"))) {
                     return new RespJson(false, "对不起了兄弟，你么得权限了!", ResultCode.ERROR, null);
                 }
             }
