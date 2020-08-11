@@ -24,4 +24,9 @@ public class UserServiceImpl implements UserService {
         Integer totalPage = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
         return Pagination.pageOf(usersList, pageSize, pageNum, totalPage);
     }
+
+    @Override
+    public void addUserInfo(List<User> users) {
+        userDao.addUserInfo(users);
+    }
 }

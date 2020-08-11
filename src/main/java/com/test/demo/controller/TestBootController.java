@@ -19,6 +19,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,15 +37,37 @@ public class TestBootController {
     public RespJson showUserInfo(HttpServletRequest request) {
         try {
             String id = request.getParameter("id");
+            String name = request.getParameter("name");
             String tel = request.getParameter("tel");
             String address = request.getParameter("address");
-            User user = new User(id, tel, address);
+            User user = new User(id, name, tel, address);
             Map<String, Integer> pageNumAndPageSize = Utils.getPageNumAndPageSize(request);
             Pagination<User> userInfoList = userService.getUserById(user, pageNumAndPageSize.get("pageNum"), pageNumAndPageSize.get("pageSize"));
             return new RespJson(true, "获取用户信息成功!", ResultCode.SUCCESS, userInfoList);
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
             return new RespJson(false, "执行操作失败!", ResultCode.ERROR, null);
+        }
+    }
+
+    @RequestMapping("/addUserInfo")
+    @ResponseBody
+    @AdviceAspect(description = "我只是想批量加点用户的信息")
+    public void addUserInfo() {
+        try {
+            List<User> users = Arrays.asList(
+                    new User(null, "abcd", "tel-abcd-1", "addr-abcd"),
+                    new User(null, "abcd1", "tel-abcd-2", "addr-abcd"),
+                    new User(null, "abcd2", "tel-abcd-3", "addr-abcd"),
+                    new User(null, "abcd3", "tel-abcd-4", "addr-abcd"),
+                    new User(null, "abcd4", "tel-abcd-6", "addr-abcd"),
+                    new User(null, "abcd5", "tel-abcd-7", "addr-abcd"),
+                    new User(null, "abcd6", "tel-abcd-8", "addr-abcd"),
+                    new User(null, "abcd7", "tel-abcd-9", "addr-abcd"),
+                    new User(null, "abcd8", "tel-abcd-10", "addr-abcd"));
+            userService.addUserInfo(users);
+        } catch (Exception e) {
+            logger.error(LoggerUtil.handleException(e));
         }
     }
 
