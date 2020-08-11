@@ -1,4 +1,4 @@
-package com.test.demo.util;
+package com.test.demo.domain;
 
 import java.time.LocalDateTime;
 import java.util.Map;

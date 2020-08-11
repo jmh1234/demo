@@ -1,4 +1,4 @@
-package com.test.demo.util;
+package com.test.demo.domain;
 
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;

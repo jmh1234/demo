@@ -1,4 +1,4 @@
-package com.test.demo.util;
+package com.test.demo.domain;
 
 @SuppressWarnings("all")
 public class ResultCode {
