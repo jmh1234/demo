@@ -5,10 +5,16 @@ import com.test.demo.annotation.Log;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class DecoratorTestService {
+public class DecoratorService implements LogProxyInterface {
+
+    public DecoratorService() {
+
+    }
+
     /**
      * 根据数据ID查询一列数据，有缓存。
      *
@@ -41,7 +47,13 @@ public class DecoratorTestService {
     }
 
     @Log
-    public void doSomething() {
-        System.out.println("i want to do something but i do not know how to do it !");
+    public void addLogByAnnotation() {
+        System.out.println("the method is invoke by byteBuddy");
+    }
+
+    @Override
+    public String addLogByProxy(String logContent) {
+        System.out.println("the method is invoke by " + logContent);
+        return UUID.randomUUID().toString();
     }
 }

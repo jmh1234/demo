@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CacheDecoratorByByteBuddy {
+public class CacheDecorator {
 
     public static <T> T getInstance(Class<T> clazz) throws Exception {
         return decorate(clazz).getConstructor().newInstance();

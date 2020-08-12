@@ -1,7 +1,6 @@
 package com.test.demo.caseTest.Ioc;
 
 import com.test.demo.controller.TestBootController;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.io.IOException;
