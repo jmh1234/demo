@@ -1,13 +1,13 @@
 package com.test.demo;
 
-import com.test.demo.caseTest.streamTest.*;
+import com.test.demo.caseTest.stream.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ProblemsTest {
+public class ProblemTestMain {
     @Test
     public void test1() {
         Assertions.assertEquals(

@@ -1,6 +1,6 @@
 package com.test.demo;
 
-import com.test.demo.caseTest.testForAnnotation.AnnotationTest;
+import com.test.demo.caseTest.annotation.AnnotationTest;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UseAnnotation {
+public class AnnotationTestMain {
 
     @Test
     @AnnotationTest(id = "47")
@@ -17,7 +17,7 @@ public class UseAnnotation {
         List<Integer> caseGather = new ArrayList<>();
         Collections.addAll(caseGather, 47, 48, 49, 50);
         try {
-            Class<?> clazz = Class.forName("com.test.demo.testForAnnotation.UseAnnotation");
+            Class<?> clazz = Class.forName("com.test.demo.annotation.AnnotationTestMain");
             // 获取所有方法的注入值
             Method[] methods = clazz.getMethods();
             for (Method method : methods) {

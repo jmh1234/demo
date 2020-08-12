@@ -1,4 +1,4 @@
-package com.test.demo.caseTest.forkJoinTest;
+package com.test.demo.caseTest.forkJoin;
 
 import java.util.concurrent.RecursiveTask;
 

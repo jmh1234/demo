@@ -1,4 +1,4 @@
-package com.test.demo.caseTest.testForAnnotation;
+package com.test.demo.caseTest.annotation;
 
 import org.springframework.context.annotation.Scope;
 

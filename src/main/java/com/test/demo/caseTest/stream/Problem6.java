@@ -1,4 +1,4 @@
-package com.test.demo.caseTest.streamTest;
+package com.test.demo.caseTest.stream;
 
 import java.util.Set;
 import java.util.stream.Collectors;

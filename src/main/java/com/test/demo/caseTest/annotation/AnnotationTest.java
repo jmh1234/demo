@@ -1,4 +1,4 @@
-package com.test.demo.caseTest.testForAnnotation;
+package com.test.demo.caseTest.annotation;
 
 import org.springframework.context.annotation.Scope;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Scope("request")
-@Repeatable(com.test.demo.caseTest.testForAnnotation.AnnotationTests.class)
+@Repeatable(com.test.demo.caseTest.annotation.AnnotationTests.class)
 
 public @interface AnnotationTest {
 

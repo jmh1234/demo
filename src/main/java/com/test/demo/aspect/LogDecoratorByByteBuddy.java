@@ -9,7 +9,7 @@ import net.bytebuddy.matcher.ElementMatchers;
 
 import java.util.concurrent.Callable;
 
-public class AdviceByEnhance {
+public class LogDecoratorByByteBuddy {
     public static <T> T getInstance(Class<T> clazz) throws Exception {
         return enhanceByAnnotation(clazz).getConstructor().newInstance();
     }

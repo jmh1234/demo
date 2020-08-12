@@ -1,6 +1,6 @@
 package com.test.demo;
 
-import com.test.demo.caseTest.forkJoinTest.ForkJoinTest;
+import com.test.demo.caseTest.forkJoin.ForkJoinTest;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -9,7 +9,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.stream.LongStream;
 
-public class UseForkJoin {
+public class ForkJoinTestMain {
     @Test
     public void testOne() {
         long sum = 0L;

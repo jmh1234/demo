@@ -1,13 +1,14 @@
-package com.test.demo.service;
+package com.test.demo.aspect;
 
 import com.test.demo.annotation.Cache;
+import com.test.demo.annotation.Log;
 
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class DataService {
+public class DecoratorTestService {
     /**
      * 根据数据ID查询一列数据，有缓存。
      *
@@ -18,9 +19,9 @@ public class DataService {
     public List<Object> queryData(int id) {
         // 模拟一个查询操作
         Random random = new Random();
-        int size = random.nextInt(10) + 10;
+        int size = random.nextInt(id) + 10;
         return IntStream.range(0, size)
-                .mapToObj(i -> random.nextInt(10))
+                .mapToObj(i -> random.nextInt(id))
                 .collect(Collectors.toList());
     }
 
@@ -33,9 +34,14 @@ public class DataService {
     public List<Object> queryDataWithoutCache(int id) {
         // 模拟一个查询操作
         Random random = new Random();
-        int size = random.nextInt(10) + 1;
+        int size = random.nextInt(id) + 1;
         return IntStream.range(0, size)
                 .mapToObj(i -> random.nextBoolean())
                 .collect(Collectors.toList());
+    }
+
+    @Log
+    public void doSomething() {
+        System.out.println("i want to do something but i do not know how to do it !");
     }
 }
