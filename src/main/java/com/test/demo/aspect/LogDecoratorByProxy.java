@@ -3,7 +3,6 @@ package com.test.demo.aspect;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.UUID;
 
 public class LogDecoratorByProxy implements InvocationHandler {
 
@@ -23,9 +22,8 @@ public class LogDecoratorByProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         System.out.println("this is running by dynamic proxy and params is " + args[0]);
-        String ret = UUID.randomUUID().toString();
-        method.invoke(instance, args);
-        System.out.println("this is running by dynamic proxy and result is " + ret);
-        return ret;
+        Object invoke = method.invoke(instance, args);
+        System.out.println("this is running by dynamic proxy and result is " + invoke);
+        return invoke;
     }
 }

@@ -47,10 +47,6 @@ public class DecoratorService implements LogProxyInterface {
     }
 
     @Log
-    public void addLogByAnnotation() {
-        System.out.println("the method is invoke by byteBuddy");
-    }
-
     @Override
     public String addLogByProxy(String logContent) {
         System.out.println("the method is invoke by " + logContent);

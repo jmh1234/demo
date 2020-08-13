@@ -5,7 +5,6 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 public class LogDecoratorByCglib implements MethodInterceptor {
 
@@ -25,9 +24,8 @@ public class LogDecoratorByCglib implements MethodInterceptor {
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
         System.out.println("this is running by CGLIB and params is " + objects[0]);
-        String ret = UUID.randomUUID().toString();
-        method.invoke(instance, objects);
-        System.out.println("this is running by CGLIB and result is " + objects[0]);
-        return ret;
+        Object invoke = method.invoke(instance, objects);
+        System.out.println("this is running by CGLIB and result is " + invoke);
+        return invoke;
     }
 }
