@@ -1,12 +1,12 @@
-package com.test.demo.aop.aopdemo;
+package com.test.demo.caseTest.aop.aopdemo;
 
-import com.test.demo.aop.aop.Aspect;
-import com.test.demo.aop.aop.IocContainer;
-import com.test.demo.aop.aop.Pointcut;
-import com.test.demo.aop.service.KtvPrincessB;
-import com.test.demo.aop.service.KtvService;
-import com.test.demo.aop.service.SPAService;
-import com.test.demo.aop.service.SpaPrincessA;
+import com.test.demo.caseTest.aop.aop.Aspect;
+import com.test.demo.caseTest.aop.aop.IocContainer;
+import com.test.demo.caseTest.aop.aop.Pointcut;
+import com.test.demo.caseTest.aop.service.KtvPrincessB;
+import com.test.demo.caseTest.aop.service.KtvService;
+import com.test.demo.caseTest.aop.service.SPAService;
+import com.test.demo.caseTest.aop.service.SpaPrincessA;
 
 public class AopMain {
 

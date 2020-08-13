@@ -1,6 +1,6 @@
-package com.test.demo.aop.aopdemo;
+package com.test.demo.caseTest.aop.aopdemo;
 
-import com.test.demo.aop.aop.Advice;
+import com.test.demo.caseTest.aop.aop.Advice;
 
 import java.lang.reflect.Method;
 
