@@ -1,12 +1,7 @@
 package com.demo.util;
 
 
-import com.demo.domain.JWTTokener;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Constant {
-    public static final List<JWTTokener> tokeners = new ArrayList<>();
-
+    public static Integer SUCCESS = 2000;
+    public static Integer ERROR = 1000;
 }

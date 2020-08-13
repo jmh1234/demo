@@ -19,14 +19,13 @@ public class User {
     private String password;
     private int age;
 
+    public User() {
+    }
+
     public User(String id, String name, String tel, String address) {
         this.id = id;
         this.tel = tel;
         this.name = name;
         this.address = address;
-    }
-
-    public User() {
-
     }
 }

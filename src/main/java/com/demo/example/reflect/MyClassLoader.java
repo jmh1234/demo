@@ -44,7 +44,7 @@ public class MyClassLoader extends ClassLoader {
 
     @SuppressWarnings("unchecked")
     public static void main(String[] args) throws Exception {
-        String filePath = "\\src\\main\\java\\com\\test\\demo\\example\\reflect";
+        String filePath = "\\src\\main\\java\\com\\demo\\example\\reflect";
         String basedir = System.getProperty("basedir", System.getProperty("user.dir")) + filePath;
         File projectRoot = new File(basedir);
         MyClassLoader myClassLoader = new MyClassLoader(projectRoot);

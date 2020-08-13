@@ -2,7 +2,7 @@ package com.demo.aspect;
 
 import com.demo.annotation.AdviceAspect;
 import com.demo.domain.RespJson;
-import com.demo.domain.ResultCode;
+import com.demo.util.Constant;
 import com.demo.util.LoggerUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -46,7 +46,7 @@ public class Advice {
             if (arg instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) arg;
                 if ("2".equals(request.getParameter("id"))) {
-                    return new RespJson(false, "对不起了兄弟，你么得权限了!", ResultCode.ERROR, null);
+                    return new RespJson(false, "对不起了兄弟，你么得权限了!", Constant.ERROR, null);
                 }
             }
         }

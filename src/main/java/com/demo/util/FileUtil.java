@@ -1,19 +1,18 @@
 package com.demo.util;
 
-import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-@SuppressWarnings("all")
+@SuppressWarnings("unused")
 public class FileUtil {
 
     private static final int BUFFER_SIZE = 2 * 1024;
@@ -21,14 +20,13 @@ public class FileUtil {
 
     public static String readToString(String filePath, String encoding) {
         File file = new File(filePath);
-        if (!file.exists()) {
-            return null;
-        }
+        if (!file.exists()) return null;
         Long fileLength = file.length();
         byte[] fileContent = new byte[fileLength.intValue()];
         try {
             FileInputStream in = new FileInputStream(file);
-            in.read(fileContent);
+            int read = in.read(fileContent);
+            System.out.println(read);
             in.close();
             return new String(fileContent, encoding);
         } catch (Exception e) {
@@ -37,48 +35,20 @@ public class FileUtil {
         }
     }
 
-    // 获取程序所在目录
-    public static String getProgramDirPath() {
-        URL url = FileUtil.class.getProtectionDomain().getCodeSource().getLocation();
-        String filePath = null;
-        try {
-            // 转化为utf-8编码
-            filePath = URLDecoder.decode(url.getPath(), "utf-8");
-        } catch (Exception e) {
-            // !! do not use : MyLog.logger.error(e.getMessage(),e);
-            e.printStackTrace();
-        }
-        if (filePath.endsWith(".jar")) {// 可执行jar包运行的结果里包含".jar"
-            // 截取路径中的jar包名
-            filePath = filePath.substring(0, filePath.lastIndexOf("/") + 1);
-        } else {
-            //filePath = new File(new File(filePath).getParentFile().getParentFile().getParentFile(),"install").getAbsolutePath();
-        }
-
-        File file = new File(filePath);
-        //得到windows下的正确路径
-        filePath = file.getAbsolutePath();
-        return filePath;
-    }
-
-    public static boolean checkExistAndAbord(String name) {
-        File f = new File(name);
-        return f.exists();
-    }
-
     /**
      * 追加写入文件
      *
-     * @param out_path
-     * @param content
-     * @param append
+     * @param out_path 文件输出路径
+     * @param content  文件内容
+     * @param append   是否追加写入文件
      */
     public static void WriteFile(String out_path, String content, boolean append) {
         PrintWriter pfp = null;
         try {
             File f = new File(out_path);
             if (!f.exists()) {
-                f.createNewFile();
+                if (f.createNewFile())
+                    logger.info("文件创建成功！");
             }
             FileWriter fw = new FileWriter(f, append);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -87,7 +57,7 @@ public class FileUtil {
         } catch (IOException e) {
             logger.error(LoggerUtil.handleException(e));
         } finally {
-            pfp.close();
+            if (pfp != null) pfp.close();
         }
     }
 
@@ -98,7 +68,8 @@ public class FileUtil {
             if (!file.exists()) {
                 file = new File(file.getParent());
                 if (!file.exists()) {
-                    file.mkdirs();
+                    if (file.mkdirs())
+                        logger.info("文件创建成功！");
                 }
             }
             osw = new OutputStreamWriter(new FileOutputStream(path), encoding);
@@ -108,9 +79,7 @@ public class FileUtil {
             e.printStackTrace();
         } finally {
             try {
-                if (osw != null) {
-                    osw.close();
-                }
+                if (osw != null) osw.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -118,11 +87,9 @@ public class FileUtil {
     }
 
     public static String formatJson(String jsonStr) {
-        if (null == jsonStr || "".equals(jsonStr)) {
-            return "";
-        }
+        if (null == jsonStr || "".equals(jsonStr)) return "";
         StringBuilder sb = new StringBuilder();
-        char last = '\0';
+        char last;
         char current = '\0';
         int indent = 0;
         boolean isInQuotationMarks = false;
@@ -195,40 +162,26 @@ public class FileUtil {
 
     private static void compress(File sourceFile, ZipOutputStream zos, String name, String type) throws Exception {
         byte[] buf = new byte[BUFFER_SIZE];
-        Boolean KeepDirStructure;
-        if ("export".equals(type)) {
-            KeepDirStructure = true;
-        } else {
-            KeepDirStructure = false;
-        }
+        Boolean KeepDirStructure = "export".equals(type);
         if (sourceFile.isFile()) {
-            // 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
             zos.putNextEntry(new ZipEntry(name));
-            // copy文件到zip输出流中
             int len;
             FileInputStream in = new FileInputStream(sourceFile);
             while ((len = in.read(buf)) != -1) {
                 zos.write(buf, 0, len);
             }
-            // Complete the entry
             zos.closeEntry();
             in.close();
         } else {
             File[] listFiles = sourceFile.listFiles();
             if (listFiles == null || listFiles.length == 0) {
-                // 需要保留原来的文件结构时,需要对空文件夹进行处理
                 if (KeepDirStructure) {
-                    // 空文件夹的处理
                     zos.putNextEntry(new ZipEntry(name + "/"));
-                    // 没有文件，不需要文件的copy
                     zos.closeEntry();
                 }
             } else {
                 for (File file : listFiles) {
-                    // 判断是否需要保留原来的文件结构
                     if (KeepDirStructure) {
-                        // 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
-                        // 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
                         compress(file, zos, name + "/" + file.getName(), type);
                     } else {
                         compress(file, zos, file.getName(), type);
@@ -255,15 +208,18 @@ public class FileUtil {
                 if (entry.isDirectory()) {
                     String dirPath = destDirPath + "/" + entry.getName();
                     File dir = new File(dirPath);
-                    dir.mkdirs();
+                    if (dir.mkdirs())
+                        logger.info("文件创建成功！");
                 } else {
                     // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
                     File targetFile = new File(destDirPath + "/" + entry.getName());
                     // 保证这个文件的父文件夹必须要存在
                     if (!targetFile.getParentFile().exists()) {
-                        targetFile.getParentFile().mkdirs();
+                        if (targetFile.getParentFile().mkdirs())
+                            logger.info("文件创建成功！");
                     }
-                    targetFile.createNewFile();
+                    if (targetFile.createNewFile())
+                        logger.info("文件创建成功！");
                     // 将压缩文件内容写入到这个文件中
                     InputStream is = zipFile.getInputStream(entry);
                     FileOutputStream fos = new FileOutputStream(targetFile);
@@ -272,7 +228,6 @@ public class FileUtil {
                     while ((len = is.read(buf)) != -1) {
                         fos.write(buf, 0, len);
                     }
-                    // 关流顺序，先打开的后关闭
                     fos.close();
                     is.close();
                 }
@@ -295,67 +250,39 @@ public class FileUtil {
         File file = new File(path);
         //如果文件夹不存在则创建
         if (!file.exists() && !file.isDirectory()) {
-            file.mkdirs();
-            logger.warn(path + "文件不存在，已创建！");
+            if (file.mkdirs())
+                logger.warn(path + "文件不存在，已创建！");
         }
     }
 
     public static List<String> getFile(String path) {
         List<String> fileNameList = new ArrayList<>();
-        File file = new File(path);
-        File[] array = file.listFiles();
-        if (array == null) {
-            return null;
-        }
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].isFile()) {
-                fileNameList.add(array[i].getName());
-            } else if (array[i].isDirectory()) {
-                getFile(array[i].getPath());
+        File originFile = new File(path);
+        File[] files = originFile.listFiles();
+        if (files == null) return null;
+        for (File file : files) {
+            if (file.isFile()) {
+                fileNameList.add(file.getName());
+            } else if (file.isDirectory()) {
+                getFile(file.getPath());
             }
         }
         return fileNameList;
     }
 
-    public static Map<String, String> getProjectAttrMap(String projectPath) {
-        String jsonProject = FileUtil.readToString(projectPath + "\\project.json", "UTF-8");
-        Map<String, String> projectInfoMap = (Map) JSONObject.parseObject(jsonProject);
-        // integrationNum 表示软件版本号 demarcateNum 表示数据版本号
-        Map<String, String> map = new HashMap<>();
-        map.put("parts", projectInfoMap.get("partsNum"));
-        map.put("parts2", projectInfoMap.get("partsNum2"));
-        map.put("soft", projectInfoMap.get("integrationNum"));
-        map.put("data", projectInfoMap.get("demarcateNum"));
-        map.put("project", projectInfoMap.get("projName"));
-        map.put("bootStandard", projectInfoMap.get("bootStandard"));
-        return map;
-    }
-
     public static void copyFile2Target(String path, String outPath) throws Exception {
-        int i = 0;
+        int i;
         byte[] bytes = new byte[1024];
-
-        File bfile = new File(outPath);
-        bfile.createNewFile();
-        FileOutputStream d = new FileOutputStream(bfile);
-
-        File afile = new File(path);
-        FileInputStream c = new FileInputStream(afile);
-        while ((i = c.read(bytes)) > -1) {
-            d.write(bytes, 0, i);
-        }
-        c.close();
-        d.close();
-    }
-
-    public static void isChartPathExist(String dirPath, String type) throws Exception {
-        File file = new File(dirPath);
-        if (!file.exists()) {
-            if ("folder".equals(type)) {
-                file.mkdirs();
-            } else if ("file".equals(type)) {
-                file.createNewFile();
+        File targetFile = new File(outPath);
+        if (targetFile.createNewFile()) {
+            File originFile = new File(path);
+            FileOutputStream targetOutStream = new FileOutputStream(targetFile);
+            FileInputStream originInputStream = new FileInputStream(originFile);
+            while ((i = originInputStream.read(bytes)) > -1) {
+                targetOutStream.write(bytes, 0, i);
             }
+            originInputStream.close();
+            targetOutStream.close();
         }
     }
 
@@ -363,23 +290,19 @@ public class FileUtil {
      * 删除指定文件夹下所有文件
      *
      * @param path 文件夹完整绝对路径
-     * @return
+     *
      */
     public static void delAllFile(String path) {
         File file = new File(path);
         if (!file.exists() && !file.isDirectory()) {
-            boolean mkdirs = file.mkdirs();
-            logger.warn(path + "文件不存在，已创建！");
+            if (file.mkdirs())
+                logger.warn(path + "文件不存在，已创建！");
             return;
         }
-        if (!file.isDirectory()) {
-            return;
-        }
+        if (!file.isDirectory()) return;
         String[] tempList = file.list();
         File temp;
-        if (tempList == null) {
-            return;
-        }
+        if (tempList == null) return;
         for (String tempFile : tempList) {
             if (path.endsWith(File.separator)) {
                 temp = new File(path + tempFile);
@@ -389,15 +312,18 @@ public class FileUtil {
 
             if (path.endsWith("sourcecode")) {
                 if (temp.isFile() && !tempFile.endsWith(".txt") && !tempFile.endsWith(".TXT")) {
-                    boolean delete = temp.delete();
+                    if (temp.delete())
+                        logger.info("文件删除成功");
                 }
             } else if (path.contains("out\\padding")) {
                 if (temp.isFile() && !tempFile.endsWith(".bat") && !tempFile.endsWith(".BAT")) {
-                    boolean delete = temp.delete();
+                    if (temp.delete())
+                        logger.info("文件删除成功");
                 }
             } else {
                 if (temp.isFile()) {
-                    boolean delete = temp.delete();
+                    if (temp.delete())
+                        logger.info("文件删除成功");
                 }
             }
             if (temp.isDirectory()) {
@@ -416,10 +342,9 @@ public class FileUtil {
      */
     private static void delFolder(String folderPath) {
         delAllFile(folderPath);
-        String filePath = folderPath;
-        filePath = filePath.toString();
-        File myFilePath = new File(filePath);
-        myFilePath.delete();
+        File myFilePath = new File(folderPath);
+        if (myFilePath.delete())
+            logger.info("文件删除成功");
     }
 
     public static void copyDir(String sourcePath, String newPath) {
@@ -427,19 +352,18 @@ public class FileUtil {
         String[] filePath = file.list();
 
         if (!(new File(newPath)).exists()) {
-            (new File(newPath)).mkdir();
-        }
-        if (filePath == null) {
-            return;
-        }
-        for (int i = 0; i < filePath.length; i++) {
-            if ((new File(sourcePath + file.separator + filePath[i])).isDirectory()) {
-                copyDir(sourcePath + file.separator + filePath[i], newPath + file.separator + filePath[i]);
+            if ((new File(newPath)).mkdir()) {
+                logger.info("文件夹创建成功");
             }
-
-            if (new File(sourcePath + file.separator + filePath[i]).isFile()) {
-                String s = FileUtil.readToString(sourcePath + file.separator + filePath[i], "UTF-8");
-                FileUtil.WriteFile(newPath + file.separator + filePath[i], s, false);
+        }
+        if (filePath == null) return;
+        for (String path : filePath) {
+            if ((new File(sourcePath + File.separator + path)).isDirectory()) {
+                copyDir(sourcePath + File.separator + path, newPath + File.separator + path);
+            }
+            if (new File(sourcePath + File.separator + path).isFile()) {
+                String content = FileUtil.readToString(sourcePath + File.separator + path, "UTF-8");
+                FileUtil.WriteFile(newPath + File.separator + path, content, false);
             }
         }
     }
@@ -452,11 +376,11 @@ public class FileUtil {
             //解决包内文件存在中文时的中文乱码问题
             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(path), Charset.forName("GBK"));
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                if (zipEntry.isDirectory()) { //遇到文件夹就跳过
+                if (zipEntry.isDirectory()) {
+                    //遇到文件夹就跳过
                     return zipEntry.getName().split("/")[0];
                 } else {
                     str = zipEntry.getName().substring(zipEntry.getName().lastIndexOf("\\") + 1);
-                    //      System.out.println(zipEntry.getName().substring(zipEntry.getName().lastIndexOf("/")+1));//通过getName()可以得到文件名称
                 }
             }
         }
