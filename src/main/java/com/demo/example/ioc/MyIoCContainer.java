@@ -2,23 +2,32 @@ package com.demo.example.ioc;
 
 import com.demo.annotation.Autowired;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MyIoCContainer {
-    private Properties properties;
     private static Map<String, Object> beansMap = new HashMap<>();
 
-    public MyIoCContainer(Properties properties) {
-        this.properties = properties;
+    public static void main(String[] args) {
+        MyIoCContainer container = new MyIoCContainer();
+        container.start();
+        OrderService orderService = (OrderService) container.getBean("orderService");
+        orderService.createOrder();
     }
 
     // 启动该容器
     public void start() {
-        properties.forEach(MyIoCContainer::addInstance2BeansMap);
-        beansMap.forEach((beanName, beanInstance) -> dependencyInject(beanInstance, beansMap));
+        try {
+            Properties properties = new Properties();
+            properties.load(MyIoCContainer.class.getResourceAsStream("/ioc.properties"));
+            properties.forEach(MyIoCContainer::addInstance2BeansMap);
+            beansMap.forEach((beanName, beanInstance) -> dependencyInject(beanInstance, beansMap));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void addInstance2BeansMap(Object beanName, Object beanClass) {
