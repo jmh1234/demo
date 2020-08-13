@@ -1,6 +1,5 @@
 package com.test.demo;
 
-import com.test.demo.example.annotation.AnnotationTest;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -8,11 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AnnotationTestMain {
+public class MyAnnotation {
 
     @Test
-    @AnnotationTest(id = "47")
-    @AnnotationTest(id = "48", description = "Passwords must contain at least one numeric")
+    @com.test.demo.example.annotation.MyAnnotation(id = "47")
+    @com.test.demo.example.annotation.MyAnnotation(id = "48", description = "Passwords must contain at least one numeric")
     public void test() {
         List<Integer> caseGather = new ArrayList<>();
         Collections.addAll(caseGather, 47, 48, 49, 50);
@@ -20,19 +19,19 @@ public class AnnotationTestMain {
             // 获取所有方法的注入值
             Method[] methods = this.getClass().getMethods();
             for (Method method : methods) {
-                AnnotationTest[] annotations = method.getDeclaredAnnotationsByType(AnnotationTest.class);
-                for (AnnotationTest annotation : annotations) {
-                    if (annotation != null) {
-                        System.out.println("Found Use Case: " + annotation.id() + " --> " + annotation.description());
-                        caseGather.remove(new Integer(annotation.id()));
+                com.test.demo.example.annotation.MyAnnotation[] myAnnotations = method.getDeclaredAnnotationsByType(com.test.demo.example.annotation.MyAnnotation.class);
+                for (com.test.demo.example.annotation.MyAnnotation myAnnotation : myAnnotations) {
+                    if (myAnnotation != null) {
+                        System.out.println("Found Use Case: " + myAnnotation.id() + " --> " + myAnnotation.description());
+                        caseGather.remove(new Integer(myAnnotation.id()));
                     }
                 }
             }
 
             // 单独获取某一函数的注释值
             /*Method method = this.getClass().getDeclaredMethod("trackUseAnn");
-            AnnotationTest[] annotations = method.getDeclaredAnnotationsByType(AnnotationTest.class);
-            for (AnnotationTest annotation : annotations) {
+            MyAnnotation[] annotations = method.getDeclaredAnnotationsByType(MyAnnotation.class);
+            for (MyAnnotation annotation : annotations) {
                 if (annotation != null) {
                     System.out.println("Found Use Case: " + annotation.id() + " --> " + annotation.description());
                     caseGather.remove(new Integer(annotation.id()));

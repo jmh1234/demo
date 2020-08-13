@@ -1,7 +1,6 @@
 package com.test.demo;
 
 import com.test.demo.annotation.Cache;
-import com.test.demo.aspect.CacheDecorator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,12 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class CacheDecoratorMain {
+public class CacheDecoratorTest {
     private TestDataService testDataService;
 
     @BeforeEach
     public void setUp() throws Exception {
-        testDataService = CacheDecorator.getInstance(TestDataService.class);
+        testDataService = com.test.demo.aspect.CacheDecorator.getInstance(TestDataService.class);
     }
 
     @Test

@@ -9,6 +9,11 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Scope("request")
-public @interface AnnotationTests {
-    AnnotationTest[] value();
+@Repeatable(MyAnnotations.class)
+
+public @interface MyAnnotation {
+
+    String id();
+
+    String description() default "no description";
 }

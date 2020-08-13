@@ -2,7 +2,7 @@ package com.test.demo.example.forkJoin;
 
 import java.util.concurrent.RecursiveTask;
 
-public class ForkJoinTest extends RecursiveTask<Long> {
+public class ForkJoin extends RecursiveTask<Long> {
     private static final long serialVersionUID = 1238793729L;
 
     private long start;
@@ -11,7 +11,7 @@ public class ForkJoinTest extends RecursiveTask<Long> {
     // 临界值，说明每个小任务最多累加10000个数
     private static final long THRESHOLD = 10000;
 
-    public ForkJoinTest(long start, long end) {
+    public ForkJoin(long start, long end) {
         this.start = start;
         this.end = end;
     }
@@ -30,8 +30,8 @@ public class ForkJoinTest extends RecursiveTask<Long> {
         } else {
             // 如果任务大于阈值，就分裂成两个子任务计算
             long mid = (start + end) / 2;
-            ForkJoinTest left = new ForkJoinTest(start, mid);
-            ForkJoinTest right = new ForkJoinTest(mid + 1, end);
+            ForkJoin left = new ForkJoin(start, mid);
+            ForkJoin right = new ForkJoin(mid + 1, end);
 
             // 并行执行两个小任务
             left.fork();

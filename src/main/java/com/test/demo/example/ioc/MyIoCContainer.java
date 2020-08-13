@@ -1,8 +1,7 @@
-package com.test.demo.example.Ioc;
+package com.test.demo.example.ioc;
 
-import com.test.demo.controller.TestBootController;
+import com.test.demo.annotation.Autowired;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,8 +18,8 @@ public class MyIoCContainer {
     public static void main(String[] args) {
         MyIoCContainer container = new MyIoCContainer();
         container.start();
-        TestBootController userController = (TestBootController) container.getBean("TestBootController");
-        userController.addUserInfo();
+        OrderService orderService = (OrderService) container.getBean("orderService");
+        orderService.createOrder();
     }
 
     public MyIoCContainer() {
@@ -49,7 +48,7 @@ public class MyIoCContainer {
 
     private void dependencyInject(Object beanInstance, Map<String, Object> beansMap) {
         List<Field> dependencyFields = Arrays.stream(beanInstance.getClass().getDeclaredFields())
-                .filter(field -> field.getAnnotation(Resource.class) != null)
+                .filter(field -> field.getAnnotation(Autowired.class) != null)
                 .collect(Collectors.toList());
         dependencyFields.forEach(field -> addDependencyOfBean(field, beanInstance, beansMap));
     }

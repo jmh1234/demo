@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ProblemTestMain {
+public class StreamTest {
     @Test
     public void test1() {
         Assertions.assertEquals(

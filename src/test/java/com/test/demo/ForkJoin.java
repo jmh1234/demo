@@ -1,6 +1,5 @@
 package com.test.demo;
 
-import com.test.demo.example.forkJoin.ForkJoinTest;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -9,7 +8,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.stream.LongStream;
 
-public class ForkJoinTestMain {
+public class ForkJoin {
     @Test
     public void testOne() {
         long sum = 0L;
@@ -32,7 +31,7 @@ public class ForkJoinTestMain {
         ForkJoinPool pool = new ForkJoinPool();
         // ForkJoinTask代表一个可以并行、合并的任务。ForkJoinTask是一个抽象类
         // 它有两个抽象子类：RecursiveAction和RecursiveTask
-        ForkJoinTask<Long> task = new ForkJoinTest(0, 100000000000L);
+        ForkJoinTask<Long> task = new com.test.demo.example.forkJoin.ForkJoin(0, 100000000000L);
         Long sum = pool.invoke(task);
 
         System.out.println(sum);
