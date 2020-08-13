@@ -1,7 +1,12 @@
 package com.demo.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Arrays;
 
+@Setter
+@Getter
 public class CacheKey {
     private String methodName;
     private Object thisObject;

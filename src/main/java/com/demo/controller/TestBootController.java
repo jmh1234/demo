@@ -3,7 +3,9 @@ package com.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.demo.annotation.AdviceAspect;
-import com.demo.domain.*;
+import com.demo.domain.RespJson;
+import com.demo.domain.ResponseResult;
+import com.demo.domain.User;
 import com.demo.service.UserService;
 import com.demo.util.Constant;
 import com.demo.util.LoggerUtil;
@@ -14,7 +16,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -45,10 +49,10 @@ public class TestBootController {
             User user = new User(id, name, tel, address);
             Map<String, Integer> pageNumAndPageSize = Utils.getPageNumAndPageSize(request);
             Pagination<User> userInfoList = userService.getUserById(user, pageNumAndPageSize.get("pageNum"), pageNumAndPageSize.get("pageSize"));
-            return new RespJson(true, "获取用户信息成功!", ResultCode.SUCCESS, userInfoList);
+            return new RespJson(true, "获取用户信息成功!", Constant.SUCCESS, userInfoList);
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
-            return new RespJson(false, "执行操作失败!", ResultCode.ERROR, null);
+            return new RespJson(false, "执行操作失败!", Constant.ERROR, null);
         }
     }
 
@@ -62,30 +66,11 @@ public class TestBootController {
                     new User(null, "abcd1", "tel-abcd-2", "addr-abcd"),
                     new User(null, "abcd2", "tel-abcd-3", "addr-abcd"),
                     new User(null, "abcd3", "tel-abcd-4", "addr-abcd"),
-                    new User(null, "abcd4", "tel-abcd-6", "addr-abcd"),
-                    new User(null, "abcd5", "tel-abcd-7", "addr-abcd"),
-                    new User(null, "abcd6", "tel-abcd-8", "addr-abcd"),
-                    new User(null, "abcd7", "tel-abcd-9", "addr-abcd"),
-                    new User(null, "abcd8", "tel-abcd-10", "addr-abcd"));
+                    new User(null, "abcd4", "tel-abcd-6", "addr-abcd"));
             userService.addUserInfo(users);
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
         }
-    }
-
-    @GetMapping("/api/validateUser")
-    public ResponesCode validate(@RequestParam(name = "token") String token) {
-        ResponesCode responesCode = new ResponesCode();
-        if (Constant.tokeners.size() > 0) {
-            for (JWTTokener tokener : Constant.tokeners) {
-                if (tokener.getToken().equals(token)) {
-                    responesCode.setStatus(true);
-                } else {
-                    responesCode.setStatus(false);
-                }
-            }
-        }
-        return responesCode;
     }
 
     @RequestMapping("/sendMsg2Server")
@@ -105,13 +90,13 @@ public class TestBootController {
 
             // 记录返回的信息
             if (!"0".equals(resPr.getRes_code().trim())) {
-                return new RespJson(false, "执行操作失败: " + resPr.getRes_msg(), ResultCode.ERROR, null);
+                return new RespJson(false, "执行操作失败: " + resPr.getRes_msg(), Constant.ERROR, null);
             } else {
-                return new RespJson(true, "执行操作成功!", ResultCode.SUCCESS, null);
+                return new RespJson(true, "执行操作成功!", Constant.SUCCESS, null);
             }
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
-            return new RespJson(false, "执行操作失败!", ResultCode.ERROR, null);
+            return new RespJson(false, "执行操作失败!", Constant.ERROR, null);
         }
     }
 
