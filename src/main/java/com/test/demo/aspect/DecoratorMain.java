@@ -4,7 +4,8 @@ import java.util.List;
 
 public class DecoratorMain {
     public static void main(String[] args) throws Exception {
-        System.out.println("---------------byteBuddy(annotation)---------------");
+        System.out.println("---------------addAdviceByAnnotation---------------");
+        System.out.println("---------------byteBuddy---------------");
         DecoratorService logDecoratorByByteBuddy = LogDecoratorByByteBuddy.getInstance(DecoratorService.class);
         logDecoratorByByteBuddy.addLogByProxy("byteBuddy");
         System.out.println();
@@ -22,15 +23,15 @@ public class DecoratorMain {
 
         System.out.println("---------------Cache---------------");
         DecoratorService cacheDecoratorByByteBuddy = CacheDecorator.getInstance(DecoratorService.class);
-        List<Object> list = cacheDecoratorByByteBuddy.queryData(10);
-        List<Object> list1 = cacheDecoratorByByteBuddy.queryData(10);
-        List<Object> list2 = cacheDecoratorByByteBuddy.queryDataWithoutCache(10);
-        List<Object> list3 = cacheDecoratorByByteBuddy.queryDataWithoutCache(10);
+        List<Object> list = cacheDecoratorByByteBuddy.queryDataWithCache(10);
+        List<Object> list1 = cacheDecoratorByByteBuddy.queryDataWithCache(10);
         System.out.println("---------------QueryWithCache---------------");
         System.out.println(list);
         System.out.println(list1);
         System.out.println();
 
+        List<Object> list2 = cacheDecoratorByByteBuddy.queryDataWithoutCache(10);
+        List<Object> list3 = cacheDecoratorByByteBuddy.queryDataWithoutCache(10);
         System.out.println("---------------QueryWithoutCache---------------");
         System.out.println(list2);
         System.out.println(list3);

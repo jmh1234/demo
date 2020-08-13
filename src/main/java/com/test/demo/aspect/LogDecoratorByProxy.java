@@ -1,15 +1,27 @@
 package com.test.demo.aspect;
 
+import com.test.demo.annotation.Log;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class LogDecoratorByProxy implements InvocationHandler {
 
     Object instance;
+    List<String> logMethodNames = new ArrayList<>();
 
     public LogDecoratorByProxy(Object instance) {
+        List<String> logMethodNames = Arrays.stream(instance.getClass().getDeclaredMethods())
+                .filter(method -> method.getAnnotation(Log.class) != null)
+                .map(Method::getName)
+                .collect(Collectors.toList());
         this.instance = instance;
+        this.logMethodNames = logMethodNames;
     }
 
     public static Object getInstance(Object instance, Class<?> interfaceClass) throws Exception {
@@ -21,9 +33,14 @@ public class LogDecoratorByProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        System.out.println("this is running by dynamic proxy and params is " + args[0]);
-        Object invoke = method.invoke(instance, args);
-        System.out.println("this is running by dynamic proxy and result is " + invoke);
+        Object invoke;
+        if (logMethodNames.size() > 0 && logMethodNames.contains(method.getName())) {
+            System.out.println("this is running by dynamic proxy and params is " + args[0]);
+            invoke = method.invoke(instance, args);
+            System.out.println("this is running by dynamic proxy and result is " + invoke);
+        } else {
+            invoke = method.invoke(instance, args);
+        }
         return invoke;
     }
 }
