@@ -9,8 +9,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MyIoCContainer {
+    private Properties properties;
     private static Map<String, Object> beansMap = new HashMap<>();
 
+    // 实现一个简单的IoC容器，使得：
+    // 1. 从beans.properties里加载bean定义
+    // 2. 自动扫描bean中的@Autowired注解并完成依赖注入
     public static void main(String[] args) {
         MyIoCContainer container = new MyIoCContainer();
         container.start();
@@ -18,16 +22,20 @@ public class MyIoCContainer {
         orderService.createOrder();
     }
 
-    // 启动该容器
-    public void start() {
+    public MyIoCContainer() {
         try {
             Properties properties = new Properties();
             properties.load(MyIoCContainer.class.getResourceAsStream("/ioc.properties"));
-            properties.forEach(MyIoCContainer::addInstance2BeansMap);
-            beansMap.forEach((beanName, beanInstance) -> dependencyInject(beanInstance, beansMap));
+            this.properties = properties;
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // 启动该容器
+    public void start() {
+        properties.forEach(MyIoCContainer::addInstance2BeansMap);
+        beansMap.forEach((beanName, beanInstance) -> dependencyInject(beanInstance, beansMap));
     }
 
     private static void addInstance2BeansMap(Object beanName, Object beanClass) {
