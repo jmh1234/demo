@@ -17,9 +17,8 @@ public class AnnotationTestMain {
         List<Integer> caseGather = new ArrayList<>();
         Collections.addAll(caseGather, 47, 48, 49, 50);
         try {
-            Class<?> clazz = Class.forName("com.test.demo.annotation.AnnotationTestMain");
             // 获取所有方法的注入值
-            Method[] methods = clazz.getMethods();
+            Method[] methods = this.getClass().getMethods();
             for (Method method : methods) {
                 AnnotationTest[] annotations = method.getDeclaredAnnotationsByType(AnnotationTest.class);
                 for (AnnotationTest annotation : annotations) {
@@ -30,8 +29,8 @@ public class AnnotationTestMain {
                 }
             }
 
-            /*// 单独获取某一函数的注释值
-            Method method = clazz.getDeclaredMethod("trackUseAnn");
+            // 单独获取某一函数的注释值
+            /*Method method = this.getClass().getDeclaredMethod("trackUseAnn");
             AnnotationTest[] annotations = method.getDeclaredAnnotationsByType(AnnotationTest.class);
             for (AnnotationTest annotation : annotations) {
                 if (annotation != null) {
