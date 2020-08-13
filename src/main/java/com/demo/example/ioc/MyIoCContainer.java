@@ -2,7 +2,6 @@ package com.demo.example.ioc;
 
 import com.demo.annotation.Autowired;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -12,24 +11,8 @@ public class MyIoCContainer {
     private Properties properties;
     private static Map<String, Object> beansMap = new HashMap<>();
 
-    // 实现一个简单的IoC容器，使得：
-    // 1. 从beans.properties里加载bean定义
-    // 2. 自动扫描bean中的@Autowired注解并完成依赖注入
-    public static void main(String[] args) {
-        MyIoCContainer container = new MyIoCContainer();
-        container.start();
-        OrderService orderService = (OrderService) container.getBean("orderService");
-        orderService.createOrder();
-    }
-
-    public MyIoCContainer() {
-        try {
-            Properties properties = new Properties();
-            properties.load(MyIoCContainer.class.getResourceAsStream("/ioc.properties"));
-            this.properties = properties;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public MyIoCContainer(Properties properties) {
+        this.properties = properties;
     }
 
     // 启动该容器
