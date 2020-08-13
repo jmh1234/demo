@@ -1,6 +1,6 @@
 package com.test.demo;
 
-import com.test.demo.caseTest.forkJoin.ForkJoinTest;
+import com.test.demo.example.forkJoin.ForkJoinTest;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;

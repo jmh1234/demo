@@ -1,6 +1,6 @@
 package com.test.demo;
 
-import com.test.demo.caseTest.annotation.AnnotationTest;
+import com.test.demo.example.annotation.AnnotationTest;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;

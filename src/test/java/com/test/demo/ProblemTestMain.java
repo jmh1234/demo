@@ -1,6 +1,6 @@
 package com.test.demo;
 
-import com.test.demo.caseTest.stream.*;
+import com.test.demo.example.stream.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
