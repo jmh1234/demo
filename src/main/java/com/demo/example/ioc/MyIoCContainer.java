@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MyIoCContainer {
-    private Properties properties = new Properties();
+    private Properties properties;
     private static Map<String, Object> beansMap = new HashMap<>();
 
     // 实现一个简单的IoC容器，使得：
@@ -24,7 +24,9 @@ public class MyIoCContainer {
 
     public MyIoCContainer() {
         try {
+            Properties properties = new Properties();
             properties.load(MyIoCContainer.class.getResourceAsStream("/ioc.properties"));
+            this.properties = properties;
         } catch (IOException e) {
             e.printStackTrace();
         }
