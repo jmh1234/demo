@@ -45,9 +45,7 @@ public class MapBeanConverter {
         String replace = method.getName()
                 .replace("get", "")
                 .replace("is", "");
-        if ("".equals(replace)) {
-            return method.getName();
-        }
+        if ("".equals(replace)) return method.getName();
         StringBuilder sb = new StringBuilder(replace);
         char c = (char) (replace.charAt(0) + 32);
         sb.deleteCharAt(0).insert(0, c);
@@ -86,57 +84,5 @@ public class MapBeanConverter {
         map.put("id", 123);
         map.put("name", "ABCDEFG");
         System.out.println(mapToBean(DemoJavaBean.class, map));
-    }
-
-    @SuppressWarnings("unused")
-    public static class DemoJavaBean {
-        private Integer id;
-        private String name;
-        private String privateField = "privateField";
-
-        public int isolate() {
-            return 0;
-        }
-
-        public String is() {
-            return "";
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getName(int i) {
-            return name + i;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        private boolean isLongName() {
-            return name.length() > 10;
-        }
-
-        @Override
-        public String toString() {
-            return "DemoJavaBean{"
-                    + "id="
-                    + id
-                    + ", name='"
-                    + name
-                    + '\''
-                    + ", longName="
-                    + isLongName()
-                    + '}';
-        }
     }
 }

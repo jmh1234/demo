@@ -7,10 +7,6 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
 public class NewTimeAPI {
-    public static void main(String args[]) {
-        testLocalDateTime();
-    }
-
     private static void testLocalDateTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // 获取当前的日期时间
@@ -40,5 +36,9 @@ public class NewTimeAPI {
         // 解析字符串
         LocalTime date5 = LocalTime.parse("20:15:30");
         System.out.println("date5: " + date5);
+    }
+
+    public static void main(String args[]) {
+        testLocalDateTime();
     }
 }

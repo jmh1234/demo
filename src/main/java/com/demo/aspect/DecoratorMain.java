@@ -12,7 +12,7 @@ public class DecoratorMain {
 
         System.out.println("---------------proxy---------------");
         LogProxyInterface logProxyInterface = new DecoratorService();
-        LogProxyInterface proxyHandler = (LogProxyInterface) LogDecoratorByProxy.getInstance(logProxyInterface, LogProxyInterface.class);
+        DecoratorService proxyHandler = (DecoratorService) LogDecoratorByProxy.getInstance(logProxyInterface, LogProxyInterface.class);
         proxyHandler.addLogByProxy("proxy");
         System.out.println();
 

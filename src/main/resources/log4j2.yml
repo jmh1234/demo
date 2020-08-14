@@ -24,7 +24,7 @@ Loggers:
         - ref: CONSOLE
         - ref: ROLLING_FILE #复数加上-
     Logger: #单独设置某些包的输出级别
-          - name: com.test.demo.dao #复数加上-
+          - name: com.demo.dao #复数加上-
             additivity: false #去除重复的log
             level: debug #trace
             AppenderRef:
