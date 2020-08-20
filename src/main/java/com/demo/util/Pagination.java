@@ -1,9 +1,10 @@
 package com.demo.util;
 
+import java.io.Serializable;
 import java.util.List;
 
 /** 数据库的分页结果， */
-public class Pagination<T> {
+public class Pagination<T> implements Serializable{
     private final List<T> items;
     private final int pageSize;
     private final int pageNum;

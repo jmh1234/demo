@@ -35,7 +35,7 @@ public class MyClassLoader extends ClassLoader {
             byte[] bytes = new byte[length.intValue()];
             FileInputStream in = new FileInputStream(fileName);
             in.read(bytes);
-            return defineClass("com.test.demo." + name, bytes, 0, bytes.length);
+            return defineClass("com.demo." + name, bytes, 0, bytes.length);
         } catch (Exception e) {
             e.printStackTrace();
         }

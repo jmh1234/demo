@@ -17,6 +17,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserDao userDao;
 
+    @Override
     public Pagination<User> getUserById(User user, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<User> usersList = userDao.selectByPrimaryKey(user);

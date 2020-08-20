@@ -3,11 +3,12 @@ package com.demo.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Setter
 @Getter
-public class User {
+public class User implements Serializable {
     private String id;
     private String tel;
     private String name;

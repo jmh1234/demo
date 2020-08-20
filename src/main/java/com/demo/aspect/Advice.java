@@ -11,8 +11,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
@@ -21,6 +23,9 @@ import java.lang.reflect.Method;
 public class Advice {
 
     private static Logger logger = LoggerUtil.getInstance(Advice.class);
+
+    @Resource
+    RedisTemplate<String, Object> redisTemplate;
 
     // 私有构造防止类被初始化
     private Advice() {
@@ -72,7 +77,14 @@ public class Advice {
             // 注入通知 标志方法执行状态
             logger.info("方法 " + methodName + " 开始执行!");
             long startTime = System.currentTimeMillis(); //获取开始时间
-            result = process.proceed();
+            Object cache = redisTemplate.opsForValue().get(sigMethod.getName());
+            if (cache != null) {
+                System.out.println("Get value from Cache");
+                result = cache;
+            } else {
+                result = process.proceed();
+                redisTemplate.opsForValue().set(sigMethod.getName(), result);
+            }
             long endTime = System.currentTimeMillis(); //获取结束时间
             logger.info("方法 " + methodName + " 执行结束!方法运行时间: " + (endTime - startTime) + "ms");
         } catch (Throwable e) {

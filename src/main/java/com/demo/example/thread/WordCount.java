@@ -1,13 +1,12 @@
 package com.demo.example.thread;
 
+import com.demo.util.FileUtil;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,17 +19,6 @@ public class WordCount {
     private WordCount(int threadNum) {
         num = threadNum;
         threadPool = Executors.newFixedThreadPool(threadNum);
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        String filePath = "\\src\\main\\java\\com\\demo\\example\\thread\\test.txt";
-        String path = System.getProperty("basedir", System.getProperty("user.dir")) + filePath;
-        File file = new File(path);
-        if (!file.exists()) return;
-        WordCount wordCount = new WordCount(10);
-        Map<String, Integer> count = wordCount.Count(file);
-        System.out.println(count);
-        threadPool.shutdown();
     }
 
     private Map<String, Integer> Count(File file) throws IOException, ExecutionException, InterruptedException {
@@ -67,5 +55,21 @@ public class WordCount {
             }
         }
         return finalResult;
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        String filePath = "\\src\\main\\java\\com\\demo\\example\\thread\\test.txt";
+        String path = System.getProperty("basedir", System.getProperty("user.dir")) + filePath;
+        File file = new File(path);
+        if (!file.exists()) return;
+        String content = FileUtil.readToString(path, "UTF-8");
+        if (content != null) {
+            String[] split = content.split(System.lineSeparator());
+            System.out.println(Arrays.asList(split));
+        }
+        WordCount wordCount = new WordCount(10);
+        Map<String, Integer> count = wordCount.Count(file);
+        System.out.println(count);
+        threadPool.shutdown();
     }
 }
