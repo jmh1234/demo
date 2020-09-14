@@ -15,11 +15,11 @@ public class Utils {
         if (request.getParameter("pageSize") == null) pageSize = 1;
         else pageSize = Integer.valueOf(request.getParameter("pageSize"));
 
-        int num;
-        if (request.getParameter("pageNum") == null) num = 1;
-        else num = Integer.valueOf(request.getParameter("pageNum"));
-        int pageNum = pageSize == 1 ? num * pageSize : (num - 1) * pageSize;
-        resultMap.put("pageNum", pageNum);
+        int pageNum;
+        if (request.getParameter("pageNum") == null) pageNum = 1;
+        else pageNum = Integer.valueOf(request.getParameter("pageNum"));
+        int offset = pageSize == 1 ? pageNum * pageSize : (pageNum - 1) * pageSize;
+        resultMap.put("offset", offset);
         resultMap.put("pageSize", pageSize);
         return resultMap;
     }

@@ -1,8 +1,8 @@
 package com.demo.aspect;
 
 import com.demo.annotation.Cache;
-import com.demo.domain.CacheKey;
-import com.demo.domain.CacheValue;
+import com.demo.entity.CacheKey;
+import com.demo.entity.CacheValue;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.*;
