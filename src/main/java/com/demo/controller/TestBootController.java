@@ -32,7 +32,7 @@ import java.util.Map;
 @RestController
 public class TestBootController {
 
-    private static Logger logger = LoggerUtil.getInstance(TestBootController.class);
+    private static final Logger logger = LoggerUtil.getInstance(TestBootController.class);
 
     @Resource
     private UserService userService;
