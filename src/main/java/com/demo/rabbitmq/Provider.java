@@ -2,23 +2,26 @@ package com.demo.rabbitmq;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-
-import java.io.IOException;
+import com.rabbitmq.client.MessageProperties;
+import lombok.SneakyThrows;
 
 public class Provider {
 
-    private final Connection connection;
+    private static final Connection connection = RabbitMQConfig.getRabbitConnection();
 
-    public Provider(Connection connection) {
-        this.connection = connection;
+
+    @SneakyThrows
+    public static void sendMessage(String message) {
+        assert connection != null;
+        Channel channel = connection.createChannel();
+        channel.queueDeclare("hello", true, false, false, null);
+        channel.basicPublish("", "hello", MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
+
+        System.out.println(" [x] Sent '" + message + "'");
+        RabbitMQConfig.closeConnectionAndChanel(channel, connection);
     }
 
-    public void sendMessage(String message) throws IOException {
-        // 创建连接通道
-        Channel channel = connection.createChannel();
-        // 通过通道绑定对应的消息队列
-        channel.queueDeclare("hello", false, false, false, null);
-        channel.basicPublish("", "hello", null, message.getBytes());
-        System.out.println(" [x] Sent '" + message + "'");
+    public static void main(String[] args) {
+        Provider.sendMessage("hello rabbitmq");
     }
 }
