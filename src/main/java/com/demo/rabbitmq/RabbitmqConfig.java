@@ -14,8 +14,8 @@ public class RabbitmqConfig {
         connectionFactory.setHost("localhost");
         connectionFactory.setVirtualHost("/jimh");
         connectionFactory.setPort(5672);
-        connectionFactory.setUsername("jimh1234");
-        connectionFactory.setPassword("jimh1234");
+        connectionFactory.setUsername("jimh");
+        connectionFactory.setPassword("jimh");
         // 获取连接对象
         return connectionFactory.newConnection();
     }
