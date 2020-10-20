@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Consumer {
-    private final static String QUEUE_NAME = "hello";
 
     private final Connection connection;
 
@@ -17,6 +16,7 @@ public class Consumer {
     }
 
     public void receiveMessage() throws IOException {
+        String QUEUE_NAME = "hello";
         Channel channel = connection.createChannel();
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");

@@ -11,7 +11,7 @@ public class RabbitmqConfig {
     public static Connection getRabbitConnection() throws IOException, TimeoutException {
         // 设置连接属性
         ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
+        connectionFactory.setHost("146.56.220.117");
         connectionFactory.setVirtualHost("/jimh");
         connectionFactory.setPort(5672);
         connectionFactory.setUsername("jimh");
