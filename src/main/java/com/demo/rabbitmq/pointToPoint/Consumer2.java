@@ -1,6 +1,6 @@
 package com.demo.rabbitmq.pointToPoint;
 
-import com.demo.rabbitmq.RabbitMQConfig;
+import com.demo.rabbitmq.RabbitMQUtil;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Consumer2 {
 
-    private static final Connection connection = RabbitMQConfig.getRabbitConnection();
+    private static final Connection connection = RabbitMQUtil.getRabbitConnection();
 
     @SneakyThrows
     public static void receiveMessage() {

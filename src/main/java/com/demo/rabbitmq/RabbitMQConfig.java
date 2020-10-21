@@ -1,34 +1,29 @@
 package com.demo.rabbitmq;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import lombok.SneakyThrows;
+import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class RabbitMQConfig {
+    @Bean("workListenerFactory")
+    public SimpleRabbitListenerContainerFactory myFactory(ConnectionFactory connectionFactory) {
+        SimpleRabbitListenerContainerFactory containerFactory =
+                new SimpleRabbitListenerContainerFactory();
+        containerFactory.setConnectionFactory(connectionFactory);
+        //自动ack,没有异常的情况下自动发送ack
+        //auto  自动确认,默认是auto
+        //MANUAL  手动确认
+        //none  不确认，发完自动丢弃
+        containerFactory.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        //拒绝策略,true回到队列 false丢弃，默认是true
+        containerFactory.setDefaultRequeueRejected(true);
 
-    private static final ConnectionFactory connectionFactory = new ConnectionFactory();
-
-    static {
-        connectionFactory.setHost("146.56.220.117");
-        connectionFactory.setVirtualHost("/jimh");
-        connectionFactory.setPort(5672);
-        connectionFactory.setUsername("jimh");
-        connectionFactory.setPassword("jimh");
-    }
-
-    @SneakyThrows
-    public static Connection getRabbitConnection() {
-        return connectionFactory.newConnection();
-    }
-
-    @SneakyThrows
-    public static void closeConnectionAndChanel(Channel channel, Connection conn) {
-        if (channel != null) {
-            channel.close();
-        }
-        if (conn != null) {
-            conn.close();
-        }
+        //默认的PrefetchCount是250，采用Round-robin dispatching，效率低
+        //setPrefetchCount 为 1，即可启用fair 转发
+        containerFactory.setPrefetchCount(1);
+        return containerFactory;
     }
 }

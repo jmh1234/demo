@@ -1,15 +1,14 @@
 package com.demo.rabbitmq.direct;
 
-import com.demo.rabbitmq.RabbitMQConfig;
+import com.demo.rabbitmq.RabbitMQUtil;
 import com.rabbitmq.client.*;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class Consumer2 {
 
-    private static final Connection connection = RabbitMQConfig.getRabbitConnection();
+    private static final Connection connection = RabbitMQUtil.getRabbitConnection();
 
     @SneakyThrows
     public static void receiveMessage() {
@@ -24,7 +23,7 @@ public class Consumer2 {
 
         channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
             @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) {
                 String message = new String(body, StandardCharsets.UTF_8);
                 System.out.println(" [x] Received_2 '" + message + "'");
             }

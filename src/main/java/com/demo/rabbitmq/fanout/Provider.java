@@ -1,13 +1,13 @@
 package com.demo.rabbitmq.fanout;
 
-import com.demo.rabbitmq.RabbitMQConfig;
+import com.demo.rabbitmq.RabbitMQUtil;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import lombok.SneakyThrows;
 
 public class Provider {
 
-    private static final Connection connection = RabbitMQConfig.getRabbitConnection();
+    private static final Connection connection = RabbitMQUtil.getRabbitConnection();
 
     @SneakyThrows
     public static void sendMessage(String message) {
@@ -16,7 +16,7 @@ public class Provider {
         channel.exchangeDeclare("logs", "fanout");
         channel.basicPublish("logs", "", null, message.getBytes());
         System.out.println(" [x] Sent '" + message + "'");
-        RabbitMQConfig.closeConnectionAndChanel(channel, connection);
+        RabbitMQUtil.closeConnectionAndChanel(channel, connection);
     }
 
     public static void main(String[] args) {

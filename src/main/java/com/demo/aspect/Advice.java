@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 @Component
 public class Advice {
 
-    private static Logger logger = LoggerUtil.getInstance(Advice.class);
+    private static final Logger logger = LoggerUtil.getInstance(Advice.class);
 
     @Resource
     RedisTemplate<String, Object> redisTemplate;

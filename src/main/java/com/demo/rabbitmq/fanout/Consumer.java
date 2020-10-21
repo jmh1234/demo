@@ -1,6 +1,6 @@
 package com.demo.rabbitmq.fanout;
 
-import com.demo.rabbitmq.RabbitMQConfig;
+import com.demo.rabbitmq.RabbitMQUtil;
 import com.rabbitmq.client.*;
 import lombok.SneakyThrows;
 
@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Consumer {
 
-    private static final Connection connection = RabbitMQConfig.getRabbitConnection();
+    private static final Connection connection = RabbitMQUtil.getRabbitConnection();
 
     @SneakyThrows(IOException.class)
     public static void receiveMessage() {

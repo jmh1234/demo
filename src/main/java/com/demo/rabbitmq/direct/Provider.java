@@ -1,13 +1,13 @@
 package com.demo.rabbitmq.direct;
 
-import com.demo.rabbitmq.RabbitMQConfig;
+import com.demo.rabbitmq.RabbitMQUtil;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import lombok.SneakyThrows;
 
 public class Provider {
 
-    private static final Connection connection = RabbitMQConfig.getRabbitConnection();
+    private static final Connection connection = RabbitMQUtil.getRabbitConnection();
 
     @SneakyThrows
     public static void sendMessage(String message) {
@@ -18,7 +18,7 @@ public class Provider {
         String actualMessage = message + (" [" + routeKey + "] 发送的信息");
         channel.basicPublish("logs_direct", routeKey, null, actualMessage.getBytes());
         System.out.println(" [x] Sent '" + actualMessage + "'");
-        RabbitMQConfig.closeConnectionAndChanel(channel, connection);
+        RabbitMQUtil.closeConnectionAndChanel(channel, connection);
     }
 
     public static void main(String[] args) {
