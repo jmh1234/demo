@@ -1,4 +1,4 @@
-package com.demo.domain;
+package com.demo.entity;
 
 import com.alibaba.fastjson.JSONObject;
 import com.demo.util.Constant;

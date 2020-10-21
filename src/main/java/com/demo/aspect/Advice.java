@@ -1,7 +1,7 @@
 package com.demo.aspect;
 
 import com.demo.annotation.AdviceAspect;
-import com.demo.domain.RespJson;
+import com.demo.entity.RespJson;
 import com.demo.util.Constant;
 import com.demo.util.LoggerUtil;
 import org.aspectj.lang.ProceedingJoinPoint;

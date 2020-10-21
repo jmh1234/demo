@@ -3,13 +3,13 @@ package com.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.demo.annotation.AdviceAspect;
-import com.demo.domain.RespJson;
-import com.demo.domain.ResponseResult;
-import com.demo.domain.User;
+import com.demo.entity.Pagination;
+import com.demo.entity.RespJson;
+import com.demo.entity.ResponseResult;
+import com.demo.entity.User;
 import com.demo.service.UserService;
 import com.demo.util.Constant;
 import com.demo.util.LoggerUtil;
-import com.demo.util.Pagination;
 import com.demo.util.Utils;
 import org.slf4j.Logger;
 import org.springframework.http.HttpEntity;
@@ -48,7 +48,7 @@ public class TestBootController {
             String address = request.getParameter("address");
             User user = new User(id, name, tel, address);
             Map<String, Integer> pageNumAndPageSize = Utils.getPageNumAndPageSize(request);
-            Pagination<User> userInfoList = userService.getUserById(user, pageNumAndPageSize.get("pageNum"), pageNumAndPageSize.get("pageSize"));
+            Pagination<User> userInfoList = userService.getUserById(user, pageNumAndPageSize.get("offset"), pageNumAndPageSize.get("pageSize"));
             return new RespJson(true, "获取用户信息成功!", Constant.SUCCESS, userInfoList);
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
@@ -81,7 +81,7 @@ public class TestBootController {
             String url = "http://localhost:8088/callback"; // 请求的URL
             logger.info("向接口 " + url + " 发起了请求");
             HttpHeaders headers = new HttpHeaders();  // 创建请求头
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<>(request.getParameter("id"), headers);
 
             RestTemplate restTemplate = new RestTemplate();
@@ -89,10 +89,10 @@ public class TestBootController {
             ResponseResult resPr = JSON.parseObject(responseEntity.getBody(), ResponseResult.class);
 
             // 记录返回的信息
-            if (!"0".equals(resPr.getRes_code().trim())) {
-                return new RespJson(false, "执行操作失败: " + resPr.getRes_msg(), Constant.ERROR, null);
-            } else {
+            if (resPr != null && "0".equals(resPr.getRes_code().trim())) {
                 return new RespJson(true, "执行操作成功!", Constant.SUCCESS, null);
+            } else {
+                return new RespJson(false, "执行操作失败!", Constant.ERROR, null);
             }
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
@@ -106,7 +106,7 @@ public class TestBootController {
     public void callback(HttpServletResponse response, HttpEntity<byte[]> requestEntity) {
         try {
             // 请求接收传递过来的参数
-            String requestJson = new String(requestEntity.getBody(), "UTF-8");
+            String requestJson = requestEntity.getBody() == null ? "" : new String(requestEntity.getBody(), "UTF-8");
 
             // 对接收到的数据的处理
             logger.info("数据接收成功! 接收的数据为: " + requestJson);

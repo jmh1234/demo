@@ -1,10 +1,17 @@
-package com.demo.util;
+package com.demo.entity;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
 
-/** 数据库的分页结果， */
-public class Pagination<T> implements Serializable{
+/**
+ * 数据库的分页结果
+ */
+@Getter
+@Setter
+public class Pagination<T> implements Serializable {
     private final List<T> items;
     private final int pageSize;
     private final int pageNum;
@@ -15,22 +22,6 @@ public class Pagination<T> implements Serializable{
         this.pageSize = pageSize;
         this.pageNum = pageNum;
         this.totalPage = totalPage;
-    }
-
-    public List<T> getItems() {
-        return items;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public int getTotalPage() {
-        return totalPage;
     }
 
     public static <T> Pagination<T> pageOf(
