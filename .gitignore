@@ -6,3 +6,4 @@
 temporary.log
 /out
 *.iml
+logs\\springboot.log
