@@ -1,5 +1,6 @@
-package com.demo.rabbitmq;
+package com.demo.rabbitmq.pointToPoint;
 
+import com.demo.rabbitmq.RabbitMQConfig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
@@ -7,7 +8,7 @@ import lombok.SneakyThrows;
 
 import java.nio.charset.StandardCharsets;
 
-public class Consumer {
+public class Consumer2 {
 
     private static final Connection connection = RabbitMQConfig.getRabbitConnection();
 
@@ -15,6 +16,7 @@ public class Consumer {
     public static void receiveMessage() {
         assert connection != null;
         Channel channel = connection.createChannel();
+        channel.basicQos(1); // 每次只能消费一个消息
         channel.queueDeclare("hello", true, false, false, null);
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
@@ -27,6 +29,6 @@ public class Consumer {
     }
 
     public static void main(String[] args) {
-        Consumer.receiveMessage();
+        receiveMessage();
     }
 }
