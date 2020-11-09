@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(offset, pageSize);
         List<User> usersList = userDao.selectByPrimaryKey(user);
         int total = (int) ((Page) usersList).getTotal();
-        Integer totalPage = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
+        int totalPage = total % pageSize == 0 ? total / pageSize : total / pageSize + 1;
         return Pagination.pageOf(usersList, pageSize, offset, totalPage);
     }
 
