@@ -5,7 +5,6 @@ import com.demo.annotation.Log;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +12,9 @@ import java.util.stream.Collectors;
 public class LogDecoratorByProxy implements InvocationHandler {
 
     Object instance;
-    List<String> logMethodNames = new ArrayList<>();
+    List<String> logMethodNames;
 
-    public LogDecoratorByProxy(Object instance) {
+    private LogDecoratorByProxy(Object instance) {
         List<String> logMethodNames = Arrays.stream(instance.getClass().getDeclaredMethods())
                 .filter(method -> method.getAnnotation(Log.class) != null)
                 .map(Method::getName)
@@ -24,7 +23,7 @@ public class LogDecoratorByProxy implements InvocationHandler {
         this.logMethodNames = logMethodNames;
     }
 
-    public static Object getInstance(Object instance, Class<?> interfaceClass) throws Exception {
+    public static Object getInstance(Object instance, Class<?> interfaceClass) {
         return Proxy.newProxyInstance(
                 instance.getClass().getClassLoader(),
                 new Class[]{interfaceClass},

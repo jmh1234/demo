@@ -15,7 +15,7 @@ public class LogDecoratorByCglib implements MethodInterceptor {
     Object instance;
     List<String> logMethodNames;
 
-    public LogDecoratorByCglib(Object instance) {
+    private LogDecoratorByCglib(Object instance) {
         List<String> logMethodNames = Arrays.stream(instance.getClass().getDeclaredMethods())
                 .filter(method -> method.getAnnotation(Log.class) != null)
                 .map(Method::getName)
