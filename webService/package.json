@@ -34,7 +34,7 @@
     "echarts": "^4.1.0",
     "echarts-for-react": "^2.0.12-beta.0",
     "enquire-js": "^0.2.1",
-    "handsontable": "^3.0.0",
+    "handsontable": "^10.0.0",
     "less": "2.7.2",
     "lodash": "^4.17.4",
     "lodash-decorators": "^4.4.1",
