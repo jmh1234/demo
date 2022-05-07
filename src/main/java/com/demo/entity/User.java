@@ -6,6 +6,13 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+/**
+ * Created with IntelliJ IDEA.
+ * User实体类
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
+ */
 @Setter
 @Getter
 public class User implements Serializable {

@@ -2,6 +2,13 @@ package com.demo.aspect;
 
 import java.util.List;
 
+/**
+ * Created with IntelliJ IDEA.
+ * 装饰器测试主类
+ *
+ * @author Ji MingHao
+ * @since 2022-04-29 13:34
+ */
 public class DecoratorMain {
     public static void main(String[] args) throws Exception {
         System.out.println("---------------addAdviceByAnnotation---------------");

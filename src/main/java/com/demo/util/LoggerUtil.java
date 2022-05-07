@@ -6,19 +6,22 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+/**
+ * Created with IntelliJ IDEA.
+ * 日志工具类
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
+ */
 public class LoggerUtil {
-    private static volatile Logger logger = null;
+    private static Logger logger = null;
 
     private LoggerUtil() {
     }
 
     public static Logger getInstance(Class<?> clazz) {
         if (logger == null) {
-            synchronized (LoggerUtil.class) {
-                if (logger == null) {
-                    logger = LoggerFactory.getLogger(clazz);
-                }
-            }
+            logger = LoggerFactory.getLogger(clazz);
         }
         return logger;
     }

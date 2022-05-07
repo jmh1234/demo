@@ -1,8 +1,8 @@
 package com.demo.aspect;
 
 import com.demo.annotation.AdviceAspect;
+import com.demo.constant.ProgramConstant;
 import com.demo.entity.RespJson;
-import com.demo.util.Constant;
 import com.demo.util.LoggerUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -18,6 +18,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
+/**
+ * Created with IntelliJ IDEA.
+ * 通知切面
+ *
+ * @author Ji MingHao
+ * @since 2022-04-29 13:34
+ */
 @Aspect
 @Component
 public class Advice {
@@ -27,14 +34,13 @@ public class Advice {
     @Resource
     RedisTemplate<String, Object> redisTemplate;
 
-    // 私有构造防止类被初始化
     private Advice() {
-
     }
 
-    // 切面的调用条件
-    @Pointcut("execution(public * com.demo.controller.*.*(..)) " +
-            " && @annotation(com.demo.annotation.AdviceAspect)")
+    /**
+     * 切面的调用条件
+     */
+    @Pointcut("execution(public * com.demo.controller.*.*(..)) && @annotation(com.demo.annotation.AdviceAspect)")
     public void addAdvice() {
     }
 
@@ -50,8 +56,8 @@ public class Advice {
             Object arg = args[0];
             if (arg instanceof HttpServletRequest) {
                 HttpServletRequest request = (HttpServletRequest) arg;
-                if ("2".equals(request.getParameter("id"))) {
-                    return new RespJson(false, "对不起了兄弟，你么得权限了!", Constant.ERROR, null);
+                if (ProgramConstant.TWO.equals(request.getParameter(ProgramConstant.ID))) {
+                    return new RespJson(false, "对不起了兄弟，你么得权限了!", ProgramConstant.ERROR, null);
                 }
             }
         }
@@ -71,22 +77,22 @@ public class Advice {
             // 获取 注解中的参数 只适用于不重复注解
             AdviceAspect annotation = method.getDeclaredAnnotationsByType(AdviceAspect.class)[0];
             if (annotation != null) {
-                logger.info("注解传入的参数为: " + annotation.description());
+                logger.info("注解传入的参数为: {}", annotation.description());
             }
 
             // 注入通知 标志方法执行状态
-            logger.info("方法 " + methodName + " 开始执行!");
-            long startTime = System.currentTimeMillis(); //获取开始时间
+            logger.info("方法 {} 开始执行!", methodName);
+            long startTime = System.currentTimeMillis();
             Object cache = redisTemplate.opsForValue().get(sigMethod.getName());
             if (cache != null) {
-                System.out.println("Get value from Cache");
+                logger.info("Get value from Cache");
                 result = cache;
             } else {
                 result = process.proceed();
                 redisTemplate.opsForValue().set(sigMethod.getName(), result);
             }
-            long endTime = System.currentTimeMillis(); //获取结束时间
-            logger.info("方法 " + methodName + " 执行结束!方法运行时间: " + (endTime - startTime) + "ms");
+            long endTime = System.currentTimeMillis();
+            logger.info("方法 {} 执行结束!方法运行时间: {}ms", methodName, endTime - startTime);
         } catch (Throwable e) {
             logger.error(LoggerUtil.handleException(e));
         }

@@ -7,12 +7,16 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Created with IntelliJ IDEA.
  * 数据库的分页结果
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
  */
 @Getter
 @Setter
 public class Pagination<T> implements Serializable {
-    private final List<T> items;
+    private transient List<T> items;
     private final int pageSize;
     private final int pageNum;
     private final int totalPage;
@@ -32,14 +36,10 @@ public class Pagination<T> implements Serializable {
     @Override
     public String toString() {
         return "Pagination{"
-                + "items="
-                + items
-                + ", pageSize="
-                + pageSize
-                + ", pageNum="
-                + pageNum
-                + ", totalPage="
-                + totalPage
+                + "items=" + items
+                + ", pageSize=" + pageSize
+                + ", pageNum=" + pageNum
+                + ", totalPage=" + totalPage
                 + '}';
     }
 }

@@ -4,7 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Arrays;
+import java.util.Objects;
 
+/**
+ * Created with IntelliJ IDEA.
+ * CacheKey
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
+ */
 @Setter
 @Getter
 public class CacheKey {
@@ -20,14 +28,20 @@ public class CacheKey {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         CacheKey cacheKey = (CacheKey) o;
-
-        if (methodName != null ? !methodName.equals(cacheKey.methodName) : cacheKey.methodName != null) return false;
-        if (thisObject != null ? !thisObject.equals(cacheKey.thisObject) : cacheKey.thisObject != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Objects.equals(methodName, cacheKey.methodName)) {
+            return false;
+        }
+        if (!Objects.equals(thisObject, cacheKey.thisObject)) {
+            return false;
+        }
         return Arrays.equals(arguments, cacheKey.arguments);
     }
 

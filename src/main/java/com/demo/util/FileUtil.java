@@ -12,11 +12,22 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Created with IntelliJ IDEA.
+ * 文件工具类
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
+ */
 @SuppressWarnings("unused")
 public class FileUtil {
 
+    private FileUtil() {
+
+    }
+
     private static final int BUFFER_SIZE = 2 * 1024;
-    private static Logger logger = LoggerUtil.getInstance(FileUtil.class);
+    private static final Logger logger = LoggerUtil.getInstance(FileUtil.class);
 
     public static String readToString(String filePath, String encoding) {
         File file = new File(filePath);

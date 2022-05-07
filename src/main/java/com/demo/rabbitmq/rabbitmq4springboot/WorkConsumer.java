@@ -4,6 +4,13 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+/**
+ * Created with IntelliJ IDEA.
+ * WorkConsumer
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
+ */
 @Component
 public class WorkConsumer {
 

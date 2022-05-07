@@ -4,7 +4,15 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-@Component // 默认创建的队列是持久化的 非独占的 不自动删除的
+/**
+ * Created with IntelliJ IDEA.
+ * HelloConsumer
+ * 默认创建的队列是持久化的 非独占的 不自动删除的
+ *
+ * @author Ji MingHao
+ * @since 2022-05-07 10:21
+ */
+@Component
 public class HelloConsumer {
 
     @RabbitListener(containerFactory = "workListenerFactory",
