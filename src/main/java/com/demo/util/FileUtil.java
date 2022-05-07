@@ -19,7 +19,7 @@ import java.util.zip.ZipOutputStream;
  * @author Ji MingHao
  * @since 2022-05-07 10:21
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("all")
 public class FileUtil {
 
     private FileUtil() {
