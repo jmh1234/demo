@@ -22,10 +22,10 @@ public class RabbitMqUtil {
 
     static {
         CONNECTION_FACTORY.setHost("146.56.220.117");
-        CONNECTION_FACTORY.setVirtualHost("/jimh");
+        CONNECTION_FACTORY.setVirtualHost("/");
         CONNECTION_FACTORY.setPort(5672);
-        CONNECTION_FACTORY.setUsername("jimh");
-        CONNECTION_FACTORY.setPassword("jimh");
+        CONNECTION_FACTORY.setUsername("admin");
+        CONNECTION_FACTORY.setPassword("admin");
     }
 
     @SneakyThrows
