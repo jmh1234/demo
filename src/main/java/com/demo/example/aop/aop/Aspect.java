@@ -1,9 +1,22 @@
 package com.demo.example.aop.aop;
 
+/**
+ * Created with IntelliJ IDEA.
+ * 切面
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class Aspect {
-    // 切点表达式(正在表达式)
+
+    /**
+     * 切点表达式(正在表达式)
+     */
     private Pointcut pointcut;
-    // 增强通知
+
+    /**
+     * 增强通知
+     */
     private Advice advice;
 
     public Aspect(Pointcut pointcut, Advice advice) {
@@ -27,5 +40,4 @@ public class Aspect {
     public void setAdvice(Advice advice) {
         this.advice = advice;
     }
-
 }

@@ -6,7 +6,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Created with IntelliJ IDEA.
+ * Problem4
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class Problem4 {
+
+    private Problem4() {
+
+    }
+
     public static class Employee {
         // 用户的id
         private final Integer id;
@@ -58,13 +70,18 @@ public class Problem4 {
         }
     }
 
-    // 请编写一个方法，对传入的List<Employee>进行如下处理：
-    // 返回一个从部门名到这个部门的所有用户的映射。同一个部门的用户按照年龄进行从小到大排序。
-    // 例如，传入的employees是[{name=张三, department=技术部, age=40 }, {name=李四, department=技术部, age=30 },
-    // {name=王五, department=市场部, age=40 }]
-    // 返回如下映射：
-    //    技术部 -> [{name=李四, department=技术部, age=30 }, {name=张三, department=技术部, age=40 }]
-    //    市场部 -> [{name=王五, department=市场部, age=40 }]
+    /**
+     * 请编写一个方法，对传入的List<Employee>进行如下处理：
+     * 返回一个从部门名到这个部门的所有用户的映射。同一个部门的用户按照年龄进行从小到大排序。
+     * 例如，传入的employees是[{name=张三, department=技术部, age=40 }, {name=李四, department=技术部, age=30 },
+     * {name=王五, department=市场部, age=40 }]
+     * 返回如下映射：
+     * 技术部 -> [{name=李四, department=技术部, age=30 }, {name=张三, department=技术部, age=40 }]
+     * 市场部 -> [{name=王五, department=市场部, age=40 }]
+     *
+     * @param employees employees
+     * @return Map
+     */
     public static Map<String, List<Employee>> collect(List<Employee> employees) {
         return employees.stream().sorted((Comparator.comparingInt(Employee::getAge))).collect(Collectors.groupingBy(Employee::getDepartment));
     }

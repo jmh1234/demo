@@ -1,9 +1,15 @@
 package com.demo.example.reflect;
 
+/**
+ * Created with IntelliJ IDEA.
+ * DemoJavaBean
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class DemoJavaBean {
     private Integer id;
     private String name;
-    private String privateField = "privateField";
 
     public int isolate() {
         return 0;
@@ -40,13 +46,9 @@ public class DemoJavaBean {
     @Override
     public String toString() {
         return "DemoJavaBean{"
-                + "id="
-                + id
-                + ", name='"
-                + name
-                + '\''
-                + ", longName="
-                + isLongName()
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", longName=" + isLongName()
                 + '}';
     }
 }

@@ -3,9 +3,18 @@ package com.demo.example.thread;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * Created with IntelliJ IDEA.
+ * Producer
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class Producer extends Thread {
-    private Container container;
+
+    private final Container container;
     private final Object lock;
+    private final Random random = new Random();
 
     Producer(Container container, Object lock) {
         this.container = container;
@@ -23,10 +32,10 @@ public class Producer extends Thread {
                         e.printStackTrace();
                     }
                 }
-                int r = new Random().nextInt();
+                Integer r = random.nextInt();
                 System.out.println("Producer " + r);
                 container.setValue(Optional.of(r));
-                lock.notify();
+                lock.notifyAll();
             }
         }
     }

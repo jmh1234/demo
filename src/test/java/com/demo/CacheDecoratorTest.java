@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class CacheDecoratorTest {
+class CacheDecoratorTest {
     private TestDataService testDataService;
 
     @BeforeEach
@@ -19,36 +19,36 @@ public class CacheDecoratorTest {
     }
 
     @Test
-    public void sameParameterCanBeCached() throws Exception {
+    void sameParameterCanBeCached() {
         List<Object> first = testDataService.cachedMethod(1, "A");
-        Thread.sleep(1000);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         List<Object> second = testDataService.cachedMethod(1, "A");
-
         Assertions.assertEquals(first, second);
     }
 
     @Test
-    public void sameParameterNotCachedAfterExpiration() throws Exception {
+    void sameParameterNotCachedAfterExpiration() throws Exception {
         List<Object> first = testDataService.cachedMethod(1, "A");
         Thread.sleep(6000);
         List<Object> second = testDataService.cachedMethod(1, "A");
-
         Assertions.assertNotEquals(first, second);
     }
 
     @Test
-    public void differentParameterNotCached() throws Exception {
+    void differentParameterNotCached() {
         List<Object> first = testDataService.cachedMethod(1, "A");
         List<Object> second = testDataService.cachedMethod(2, "A");
-
         Assertions.assertNotEquals(first, second);
     }
 
     @Test
-    public void nonCachedMethodWorks() throws Exception {
+    void nonCachedMethodWorks() {
         List<Object> first = testDataService.nonCachedMethod(1, "A");
         List<Object> second = testDataService.nonCachedMethod(1, "A");
-
         Assertions.assertNotEquals(first, second);
     }
 

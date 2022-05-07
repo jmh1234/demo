@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = DemoApplication.class)
-public class SpringBootRabbitMQTest {
+class SpringBootRabbitMQTest {
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -39,7 +39,7 @@ public class SpringBootRabbitMQTest {
 //    }
 
     @Test
-    public void testHello() {
+    void testHello() {
         for (int i = 1; i <= 10; i++) {
             rabbitTemplate.convertAndSend("hello", "hello word " + i);
         }

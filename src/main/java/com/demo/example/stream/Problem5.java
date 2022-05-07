@@ -5,10 +5,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Created with IntelliJ IDEA.
+ * Problem5
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class Problem5 {
+
+    private Problem5() {
+
+    }
+
     public static class Order {
-        private Integer id;
-        private String name;
+        private final Integer id;
+        private final String name;
 
         public Order(Integer id, String name) {
             this.id = id;
@@ -24,8 +36,13 @@ public class Problem5 {
         }
     }
 
-    // 例如，传入参数[{id=1,name='肥皂'},{id=2,name='牙刷'}]
-    // 返回一个映射{1->Order(1,'肥皂'),2->Order(2,'牙刷')}
+    /**
+     * 例如，传入参数[{id=1,name='肥皂'},{id=2,name='牙刷'}]
+     * 返回一个映射{1->Order(1,'肥皂'),2->Order(2,'牙刷')}
+     *
+     * @param orders orders
+     * @return Map
+     */
     public static Map<Integer, Order> toMap(List<Order> orders) {
         return orders.stream().sorted(Comparator.comparingInt(o -> o.id)).collect(Collectors.toMap(Order::getId, order -> order, (order, order2) -> order));
     }

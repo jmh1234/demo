@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MyAnnotationTest {
+class MyAnnotationTest {
 
     @Test
     @MyAnnotation(id = "47")
     @MyAnnotation(id = "48", description = "Passwords must contain at least one numeric")
-    public void test() {
+    void test() {
         List<Integer> caseGather = new ArrayList<>();
         Collections.addAll(caseGather, 47, 48, 49, 50);
         try {
@@ -41,7 +41,6 @@ public class MyAnnotationTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         for (int i : caseGather) {
             System.out.println("Warning: Missing use case - " + i);
         }

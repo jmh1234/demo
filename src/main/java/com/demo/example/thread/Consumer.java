@@ -2,8 +2,15 @@ package com.demo.example.thread;
 
 import java.util.Optional;
 
+/**
+ * Created with IntelliJ IDEA.
+ * Consumer
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class Consumer extends Thread {
-    private Container container;
+    private final Container container;
     private final Object lock;
 
     Consumer(Container container, Object lock) {
@@ -25,7 +32,7 @@ public class Consumer extends Thread {
                 Integer integer = container.getValue().get();
                 container.setValue(Optional.empty());
                 System.out.println("Consumer " + integer);
-                lock.notify();
+                lock.notifyAll();
             }
         }
     }

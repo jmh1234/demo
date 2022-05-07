@@ -11,6 +11,7 @@ import java.util.concurrent.Semaphore;
  * @since 2022-04-29 13:34
  */
 public class SemaphoreTest {
+
     /**
      * 停车场同时容纳的车辆10
      */

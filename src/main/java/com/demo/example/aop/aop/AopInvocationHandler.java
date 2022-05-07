@@ -3,9 +3,16 @@ package com.demo.example.aop.aop;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+/**
+ * Created with IntelliJ IDEA.
+ * 切面拦截处理器
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 public class AopInvocationHandler implements InvocationHandler {
-    private Object target;
-    private Aspect aspect;
+    private final Object target;
+    private final Aspect aspect;
 
     public AopInvocationHandler(Object target, Aspect aspect) {
         super();

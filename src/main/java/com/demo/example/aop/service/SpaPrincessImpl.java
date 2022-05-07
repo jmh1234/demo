@@ -5,15 +5,22 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Created with IntelliJ IDEA.
+ * SpaPrincessImpl
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
 @Service
-public class SpaPrincessA implements SPAService {
-    private Random random = new Random();
-    private int bound = 5;
+public class SpaPrincessImpl implements SpaService {
+    private final Random random = new Random();
+    private static final int BOUND = 5;
 
     @Override
     public void aromaOilMessage(String customer) {
         try {
-            TimeUnit.SECONDS.sleep(random.nextInt(bound));
+            TimeUnit.SECONDS.sleep(random.nextInt(BOUND));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -23,7 +30,7 @@ public class SpaPrincessA implements SPAService {
     @Override
     public void rest() {
         try {
-            TimeUnit.SECONDS.sleep(random.nextInt(bound));
+            TimeUnit.SECONDS.sleep(random.nextInt(BOUND));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,13 @@
 package com.demo.example.thread;
 
-public class BOSS {
+/**
+ * Created with IntelliJ IDEA.
+ * Boss
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
+public class Boss {
     public static void main(String[] args) throws InterruptedException {
         Container container = new Container();
         Object lock = new Object();

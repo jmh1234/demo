@@ -2,14 +2,17 @@ package com.demo;
 
 import com.demo.example.stream.*;
 import org.junit.jupiter.api.Assertions;
-
-import java.util.*;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-public class StreamTest {
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+class StreamTest {
     @Test
-    public void test1() {
+    void test1() {
         Assertions.assertEquals(
                 2,
                 Problem1.countUsers(
@@ -21,8 +24,8 @@ public class StreamTest {
     }
 
     @Test
-    public void test2() {
-        LinkedList<String> linkedList =
+    void test2() {
+        List<String> linkedList =
                 Problem1.collectNames(
                         Arrays.asList(
                                 new Problem1.User("张三", 60),
@@ -36,19 +39,19 @@ public class StreamTest {
     }
 
     @Test
-    public void test3() {
+    void test3() {
         Assertions.assertTrue(
                 Problem2.containsKeyword("catcatcat,boyboyboy", Arrays.asList("boy", "girl")));
         Assertions.assertFalse(Problem2.containsKeyword("I am a boy", Arrays.asList("cat", "dog")));
     }
 
     @Test
-    public void test4() {
+    void test4() {
         Assertions.assertEquals(6, Problem3.countUpperCaseLetters("AaBbCc1234ABC"));
     }
 
     @Test
-    public void test5() {
+    void test5() {
         Map<String, List<Problem4.Employee>> map =
                 Problem4.collect(
                         Arrays.asList(
@@ -66,7 +69,7 @@ public class StreamTest {
     }
 
     @Test
-    public void test6() {
+    void test6() {
         Map<Integer, Problem5.Order> map =
                 Problem5.toMap(
                         Arrays.asList(new Problem5.Order(1, "A"), new Problem5.Order(2, "B")));
@@ -76,7 +79,7 @@ public class StreamTest {
     }
 
     @Test
-    public void test7() {
+    void test7() {
         LinkedHashSet<String> words =
                 new LinkedHashSet<>(Arrays.asList("a", "bb", "ccc", "d", "e"));
         Assertions.assertEquals("a,d,e", Problem6.filterThenConcat(words));

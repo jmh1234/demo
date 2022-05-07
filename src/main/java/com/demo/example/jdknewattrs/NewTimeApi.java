@@ -1,4 +1,4 @@
-package com.demo.example.jdkNewAttrs;
+package com.demo.example.jdknewattrs;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,7 +6,14 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
-public class NewTimeAPI {
+/**
+ * Created with IntelliJ IDEA.
+ * NewTimeApi
+ *
+ * @author Ji MingHao
+ * @since 2022-04-08 11:35
+ */
+public class NewTimeApi {
     private static void testLocalDateTime() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         // 获取当前的日期时间
@@ -38,7 +45,7 @@ public class NewTimeAPI {
         System.out.println("date5: " + date5);
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         testLocalDateTime();
     }
 }
