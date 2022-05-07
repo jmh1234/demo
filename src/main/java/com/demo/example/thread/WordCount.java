@@ -33,7 +33,7 @@ public class WordCount {
         Map<String, Integer> finalResult = new HashMap<>(ProgramConstant.MAP_INIT_CAPACITY);
         ThreadPoolExecutor executor = new ThreadPoolExecutor(num, num, 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
-        try (final BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try ( BufferedReader reader = new BufferedReader(new FileReader(file))) {
             for (int i = 0; i < num; i++) {
                 Future<Map<String, Integer>> singleResult = executor.submit(() -> {
                     String line;

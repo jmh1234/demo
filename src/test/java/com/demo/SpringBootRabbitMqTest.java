@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = DemoApplication.class)
-class SpringBootRabbitMQTest {
+class SpringBootRabbitMqTest {
 
     @Resource
     private RabbitTemplate rabbitTemplate;

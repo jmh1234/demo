@@ -11,6 +11,9 @@ public class Sort {
 
     /**
      * 冒泡排序
+     *
+     * @param nums nums
+     * @return sortArray1
      */
     public int[] sortArray1(int[] nums) {
         for (int i = 0; i < nums.length; i++) {
@@ -28,6 +31,9 @@ public class Sort {
 
     /**
      * 归并排序
+     *
+     * @param nums nums
+     * @return sortArray1
      */
     public int[] sortArray(int[] nums) {
         divide(nums, 0, nums.length - 1);
