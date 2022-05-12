@@ -3,8 +3,12 @@ package com.demo.util;
 import org.slf4j.Logger;
 
 import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -19,86 +23,118 @@ import java.util.zip.ZipOutputStream;
  * @author Ji MingHao
  * @since 2022-05-07 10:21
  */
-@SuppressWarnings("all")
 public class FileUtil {
 
     private FileUtil() {
 
     }
 
-    private static final int BUFFER_SIZE = 2 * 1024;
+    private static final String SUCCESS_MSG = "文件创建成功！";
+    private static final int BUFFER_SIZE = 1024;
     private static final Logger logger = LoggerUtil.getInstance(FileUtil.class);
 
-    public static String readToString(String filePath, String encoding) {
+    public static String readToString(String filePath) {
+        StringBuilder sb = new StringBuilder();
         File file = new File(filePath);
-        if (!file.exists()) return null;
-        Long fileLength = file.length();
-        byte[] fileContent = new byte[fileLength.intValue()];
-        try {
-            FileInputStream in = new FileInputStream(file);
-            int read = in.read(fileContent);
-            System.out.println(read);
-            in.close();
-            return new String(fileContent, encoding);
+        try (FileChannel channel = new FileInputStream(file).getChannel()) {
+            ByteBuffer byteBuffer = ByteBuffer.allocate(32);
+            while (true) {
+                final int read = channel.read(byteBuffer);
+                if (read == -1) {
+                    break;
+                }
+                byteBuffer.flip();
+                final byte[] bytes = byteBuffer.array();
+                sb.append(new String(bytes));
+                byteBuffer.clear();
+            }
         } catch (Exception e) {
             logger.error(LoggerUtil.handleException(e));
-            return null;
         }
+        return sb.toString();
+    }
+
+    /**
+     * 通过 FileChannel.map()拿到MappedByteBuffer
+     * 使用内存文件映射，速度会快很多
+     *
+     * @throws IOException IOException
+     */
+    public static String readByChannel(String filePath) throws IOException {
+        File file = new File(filePath);
+        StringBuilder sb = new StringBuilder();
+        try (FileChannel channel = new RandomAccessFile(file, "rw").getChannel()) {
+            long size = channel.size();
+            MappedByteBuffer mappedByteBuffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, size);
+            if (size > BUFFER_SIZE) {
+                byte[] bytes = new byte[BUFFER_SIZE];
+                long cycle = size / BUFFER_SIZE;
+                int mode = (int) (size % BUFFER_SIZE);
+                for (int i = 0; i < cycle; i++) {
+                    mappedByteBuffer.get(bytes);
+                    sb.append(new String(bytes));
+                }
+                if (mode > 0) {
+                    bytes = new byte[mode];
+                    mappedByteBuffer.get(bytes);
+                    sb.append(new String(bytes));
+                }
+            } else {
+                byte[] all = new byte[(int) size];
+                mappedByteBuffer.get(all, 0, (int) size);
+                sb.append(new String(all));
+            }
+        }
+        return sb.toString();
     }
 
     /**
      * 追加写入文件
      *
-     * @param out_path 文件输出路径
-     * @param content  文件内容
-     * @param append   是否追加写入文件
+     * @param outPath 文件输出路径
+     * @param content 文件内容
+     * @param append  是否追加写入文件
      */
-    public static void WriteFile(String out_path, String content, boolean append) {
-        PrintWriter pfp = null;
-        try {
-            File f = new File(out_path);
+    public static void writeFile(String outPath, String content, boolean append) {
+        File f = new File(outPath);
+        try (FileWriter fw = new FileWriter(f, append);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter pfp = new PrintWriter(bw)) {
             if (!f.exists()) {
-                if (f.createNewFile())
-                    logger.info("文件创建成功！");
+                boolean newFile = f.createNewFile();
+                if (newFile) {
+                    logger.info(SUCCESS_MSG);
+                }
             }
-            FileWriter fw = new FileWriter(f, append);
-            BufferedWriter bw = new BufferedWriter(fw);
-            pfp = new PrintWriter(bw);
             pfp.println(content);
         } catch (IOException e) {
             logger.error(LoggerUtil.handleException(e));
-        } finally {
-            if (pfp != null) pfp.close();
         }
     }
 
-    public static void WriteFile(String path, String content, String encoding) {
-        OutputStreamWriter osw = null;
-        try {
-            File file = new File(path);
+    public static void writeFile(String path, String content, String encoding) {
+        File file = new File(path);
+        try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(path), encoding)) {
             if (!file.exists()) {
                 file = new File(file.getParent());
                 if (!file.exists()) {
-                    if (file.mkdirs())
-                        logger.info("文件创建成功！");
+                    boolean mkdirs = file.mkdirs();
+                    if (mkdirs) {
+                        logger.info(SUCCESS_MSG);
+                    }
                 }
             }
-            osw = new OutputStreamWriter(new FileOutputStream(path), encoding);
             osw.write(content);
             osw.flush();
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (osw != null) osw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            logger.error(LoggerUtil.handleException(e));
         }
     }
 
     public static String formatJson(String jsonStr) {
-        if (null == jsonStr || "".equals(jsonStr)) return "";
+        if (null == jsonStr || "".equals(jsonStr)) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         char last;
         char current = '\0';
@@ -152,47 +188,36 @@ public class FileUtil {
         }
     }
 
-    public static void toZip(String srcDir, OutputStream out, String type) throws RuntimeException {
-        ZipOutputStream zos = null;
-        try {
-            zos = new ZipOutputStream(out);
+    public static void toZip(String srcDir, OutputStream out, String type) {
+        try (ZipOutputStream zos = new ZipOutputStream(out)) {
             File sourceFile = new File(srcDir);
             compress(sourceFile, zos, sourceFile.getName(), type);
         } catch (Exception e) {
-            throw new RuntimeException("zip error from ZipUtils", e);
-        } finally {
-            if (zos != null) {
-                try {
-                    zos.close();
-                } catch (IOException e) {
-                    logger.error(LoggerUtil.handleException(e));
-                }
-            }
+            logger.error(LoggerUtil.handleException(e));
         }
     }
 
-    private static void compress(File sourceFile, ZipOutputStream zos, String name, String type) throws Exception {
+    private static void compress(File sourceFile, ZipOutputStream zos, String name, String type) throws IOException {
         byte[] buf = new byte[BUFFER_SIZE];
-        Boolean KeepDirStructure = "export".equals(type);
         if (sourceFile.isFile()) {
             zos.putNextEntry(new ZipEntry(name));
             int len;
-            FileInputStream in = new FileInputStream(sourceFile);
-            while ((len = in.read(buf)) != -1) {
-                zos.write(buf, 0, len);
+            try (FileInputStream in = new FileInputStream(sourceFile)) {
+                while ((len = in.read(buf)) != -1) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
             }
-            zos.closeEntry();
-            in.close();
         } else {
             File[] listFiles = sourceFile.listFiles();
             if (listFiles == null || listFiles.length == 0) {
-                if (KeepDirStructure) {
+                if ("export".equals(type)) {
                     zos.putNextEntry(new ZipEntry(name + "/"));
                     zos.closeEntry();
                 }
             } else {
                 for (File file : listFiles) {
-                    if (KeepDirStructure) {
+                    if ("export".equals(type)) {
                         compress(file, zos, name + "/" + file.getName(), type);
                     } else {
                         compress(file, zos, file.getName(), type);
@@ -202,58 +227,50 @@ public class FileUtil {
         }
     }
 
-    public static void unZip(String filePath, String destDirPath) throws RuntimeException {
+    public static void unZip(String filePath, String destDirPath) {
         File srcFile = new File(filePath);
         // 判断源文件是否存在
         if (!srcFile.exists()) {
-            throw new RuntimeException(srcFile.getPath() + "所指文件不存在");
+            return;
         }
         // 开始解压
-        ZipFile zipFile = null;
-        try {
-            zipFile = new ZipFile(srcFile);
+        try (ZipFile zipFile = new ZipFile(srcFile)) {
             Enumeration<?> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 // 如果是文件夹，就创建个文件夹
                 if (entry.isDirectory()) {
-                    String dirPath = destDirPath + "/" + entry.getName();
+                    String dirPath = destDirPath + File.separator + entry.getName();
                     File dir = new File(dirPath);
-                    if (dir.mkdirs())
-                        logger.info("文件创建成功！");
+                    if (dir.mkdirs()) {
+                        logger.info(SUCCESS_MSG);
+                    }
                 } else {
                     // 如果是文件，就先创建一个文件，然后用io流把内容copy过去
-                    File targetFile = new File(destDirPath + "/" + entry.getName());
+                    File targetFile = new File(destDirPath + File.separator + entry.getName());
                     // 保证这个文件的父文件夹必须要存在
                     if (!targetFile.getParentFile().exists()) {
-                        if (targetFile.getParentFile().mkdirs())
-                            logger.info("文件创建成功！");
+                        boolean mkdirs = targetFile.getParentFile().mkdirs();
+                        if (mkdirs) {
+                            logger.info(SUCCESS_MSG);
+                        }
                     }
-                    if (targetFile.createNewFile())
-                        logger.info("文件创建成功！");
+                    if (targetFile.createNewFile()) {
+                        logger.info(SUCCESS_MSG);
+                    }
                     // 将压缩文件内容写入到这个文件中
-                    InputStream is = zipFile.getInputStream(entry);
-                    FileOutputStream fos = new FileOutputStream(targetFile);
-                    int len;
-                    byte[] buf = new byte[BUFFER_SIZE];
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
+                    try (InputStream is = zipFile.getInputStream(entry);
+                         FileOutputStream fos = new FileOutputStream(targetFile)) {
+                        int len;
+                        byte[] buf = new byte[BUFFER_SIZE];
+                        while ((len = is.read(buf)) != -1) {
+                            fos.write(buf, 0, len);
+                        }
                     }
-                    fos.close();
-                    is.close();
                 }
             }
         } catch (Exception e) {
-            logger.error("unzip error from ZipUtils", e);
-            throw new RuntimeException("unzip error from ZipUtils", e);
-        } finally {
-            if (zipFile != null) {
-                try {
-                    zipFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            logger.error(LoggerUtil.handleException(e));
         }
     }
 
@@ -261,8 +278,10 @@ public class FileUtil {
         File file = new File(path);
         //如果文件夹不存在则创建
         if (!file.exists() && !file.isDirectory()) {
-            if (file.mkdirs())
-                logger.warn(path + "文件不存在，已创建！");
+            boolean mkdirs = file.mkdirs();
+            if (mkdirs) {
+                logger.warn("{}文件不存在，已创建！", path);
+            }
         }
     }
 
@@ -270,7 +289,9 @@ public class FileUtil {
         List<String> fileNameList = new ArrayList<>();
         File originFile = new File(path);
         File[] files = originFile.listFiles();
-        if (files == null) return null;
+        if (files == null) {
+            return Collections.emptyList();
+        }
         for (File file : files) {
             if (file.isFile()) {
                 fileNameList.add(file.getName());
@@ -281,19 +302,18 @@ public class FileUtil {
         return fileNameList;
     }
 
-    public static void copyFile2Target(String path, String outPath) throws Exception {
+    public static void copyFile2Target(String path, String outPath) throws IOException {
         int i;
         byte[] bytes = new byte[1024];
         File targetFile = new File(outPath);
         if (targetFile.createNewFile()) {
             File originFile = new File(path);
-            FileOutputStream targetOutStream = new FileOutputStream(targetFile);
-            FileInputStream originInputStream = new FileInputStream(originFile);
-            while ((i = originInputStream.read(bytes)) > -1) {
-                targetOutStream.write(bytes, 0, i);
+            try (FileOutputStream targetOutStream = new FileOutputStream(targetFile);
+                 FileInputStream originInputStream = new FileInputStream(originFile)) {
+                while ((i = originInputStream.read(bytes)) > -1) {
+                    targetOutStream.write(bytes, 0, i);
+                }
             }
-            originInputStream.close();
-            targetOutStream.close();
         }
     }
 
@@ -304,16 +324,22 @@ public class FileUtil {
      *
      */
     public static void delAllFile(String path) {
+        String fileDeleteMsg = "文件删除成功";
         File file = new File(path);
         if (!file.exists() && !file.isDirectory()) {
-            if (file.mkdirs())
-                logger.warn(path + "文件不存在，已创建！");
+            if (file.mkdirs()) {
+                logger.warn("{}文件不存在，已创建！", path);
+            }
             return;
         }
-        if (!file.isDirectory()) return;
+        if (!file.isDirectory()) {
+            return;
+        }
         String[] tempList = file.list();
         File temp;
-        if (tempList == null) return;
+        if (tempList == null) {
+            return;
+        }
         for (String tempFile : tempList) {
             if (path.endsWith(File.separator)) {
                 temp = new File(path + tempFile);
@@ -321,20 +347,19 @@ public class FileUtil {
                 temp = new File(path + File.separator + tempFile);
             }
 
+            boolean file1 = temp.isFile();
+            boolean delete = temp.delete();
             if (path.endsWith("sourcecode")) {
-                if (temp.isFile() && !tempFile.endsWith(".txt") && !tempFile.endsWith(".TXT")) {
-                    if (temp.delete())
-                        logger.info("文件删除成功");
+                if (file1 && !tempFile.endsWith(".txt") && !tempFile.endsWith(".TXT") && delete) {
+                    logger.info(fileDeleteMsg);
                 }
             } else if (path.contains("out\\padding")) {
-                if (temp.isFile() && !tempFile.endsWith(".bat") && !tempFile.endsWith(".BAT")) {
-                    if (temp.delete())
-                        logger.info("文件删除成功");
+                if (file1 && !tempFile.endsWith(".bat") && !tempFile.endsWith(".BAT") && delete) {
+                    logger.info(fileDeleteMsg);
                 }
             } else {
-                if (temp.isFile()) {
-                    if (temp.delete())
-                        logger.info("文件删除成功");
+                if (file1 && delete) {
+                    logger.info(fileDeleteMsg);
                 }
             }
             if (temp.isDirectory()) {
@@ -354,44 +379,50 @@ public class FileUtil {
     private static void delFolder(String folderPath) {
         delAllFile(folderPath);
         File myFilePath = new File(folderPath);
-        if (myFilePath.delete())
+        if (myFilePath.delete()) {
             logger.info("文件删除成功");
+        }
     }
 
     public static void copyDir(String sourcePath, String newPath) {
         File file = new File(sourcePath);
         String[] filePath = file.list();
-
-        if (!(new File(newPath)).exists()) {
-            if ((new File(newPath)).mkdir()) {
+        File newPathFile = new File(newPath);
+        boolean exists = newPathFile.exists();
+        if (!exists) {
+            boolean mkdir = newPathFile.mkdir();
+            if (mkdir) {
                 logger.info("文件夹创建成功");
             }
         }
-        if (filePath == null) return;
+        if (filePath == null) {
+            return;
+        }
         for (String path : filePath) {
             if ((new File(sourcePath + File.separator + path)).isDirectory()) {
                 copyDir(sourcePath + File.separator + path, newPath + File.separator + path);
             }
             if (new File(sourcePath + File.separator + path).isFile()) {
-                String content = FileUtil.readToString(sourcePath + File.separator + path, "UTF-8");
-                FileUtil.WriteFile(newPath + File.separator + path, content, false);
+                String content = FileUtil.readToString(sourcePath + File.separator + path);
+                writeFile(newPath + File.separator + path, content, false);
             }
         }
     }
 
-    public static String readZipFile(String path) throws Exception {
+    public static String readZipFile(String path) throws IOException {
         ZipEntry zipEntry;
         String str = "";
         File file = new File(path);
         if (file.exists()) {
             //解决包内文件存在中文时的中文乱码问题
-            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(path), Charset.forName("GBK"));
-            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                if (zipEntry.isDirectory()) {
-                    //遇到文件夹就跳过
-                    return zipEntry.getName().split("/")[0];
-                } else {
-                    str = zipEntry.getName().substring(zipEntry.getName().lastIndexOf("\\") + 1);
+            try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(path), Charset.forName("GBK"))) {
+                while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                    if (zipEntry.isDirectory()) {
+                        //遇到文件夹就跳过
+                        return zipEntry.getName().split("/")[0];
+                    } else {
+                        str = zipEntry.getName().substring(zipEntry.getName().lastIndexOf("\\") + 1);
+                    }
                 }
             }
         }

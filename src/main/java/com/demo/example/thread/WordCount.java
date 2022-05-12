@@ -63,7 +63,7 @@ public class WordCount {
         if (!file.exists()) {
             return;
         }
-        String content = FileUtil.readToString(path, "UTF-8");
+        String content = FileUtil.readToString(path);
         if (content != null) {
             String[] split = content.split(System.lineSeparator());
             System.out.println(Arrays.asList(split));
