@@ -2,8 +2,8 @@ package com.demo.example.netty;
 
 import com.demo.util.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,9 +15,8 @@ import java.io.IOException;
 public class FileNioChannelTest {
     public static void main(String[] args) {
         String filePath = "src/main/java/com/demo/example/thread/test.txt";
-        String path = System.getProperty("basedir", System.getProperty("user.dir")) + File.separator + filePath;
         try {
-            System.out.println(FileUtil.readByChannel(path));
+            System.out.println(FileUtil.readByChannel(Paths.get(filePath)));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -68,8 +69,8 @@ public class FileUtil {
      * @return 文件内容
      * @throws IOException IOException
      */
-    public static String readByChannel(String filePath) throws IOException {
-        File file = new File(filePath);
+    public static String readByChannel(Path filePath) throws IOException {
+        final File file = filePath.toFile();
         StringBuilder sb = new StringBuilder();
         try (FileChannel channel = new RandomAccessFile(file, "rw").getChannel()) {
             long size = channel.size();
@@ -94,6 +95,25 @@ public class FileUtil {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 文件拷贝
+     *
+     * @param sourcePath 源文件路径
+     * @param targetPath 目标文件路径
+     */
+    public static void writeFile(String sourcePath, String targetPath) {
+        try (FileChannel from = new FileInputStream(sourcePath).getChannel();
+             FileChannel to = new FileOutputStream(targetPath).getChannel()) {
+            final long size = from.size();
+            long left = size;
+            while (left > 0) {
+                left -= from.transferTo(size - left, left, to);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
