@@ -33,6 +33,12 @@ public class FileUtil {
     private static final int BUFFER_SIZE = 1024;
     private static final Logger logger = LoggerUtil.getInstance(FileUtil.class);
 
+    /**
+     * 普通的NIO读取文件
+     *
+     * @param filePath 文件路径
+     * @return 文件内容
+     */
     public static String readToString(String filePath) {
         StringBuilder sb = new StringBuilder();
         File file = new File(filePath);
@@ -58,6 +64,8 @@ public class FileUtil {
      * 通过 FileChannel.map()拿到MappedByteBuffer
      * 使用内存文件映射，速度会快很多
      *
+     * @param filePath 文件路径
+     * @return 文件内容
      * @throws IOException IOException
      */
     public static String readByChannel(String filePath) throws IOException {
@@ -112,6 +120,13 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 根据编码写入文件
+     *
+     * @param path     文件输出路径
+     * @param content  文件内容
+     * @param encoding 文档编码
+     */
     public static void writeFile(String path, String content, String encoding) {
         File file = new File(path);
         try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(path), encoding)) {
@@ -131,6 +146,12 @@ public class FileUtil {
         }
     }
 
+    /**
+     * JSON格式化
+     *
+     * @param jsonStr json字符串
+     * @return 格式化后的字符串
+     */
     public static String formatJson(String jsonStr) {
         if (null == jsonStr || "".equals(jsonStr)) {
             return "";
