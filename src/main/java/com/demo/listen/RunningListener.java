@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +27,9 @@ public class RunningListener implements ApplicationRunner {
         for (String name : beanDefinitionNames) {
             System.out.println("============> " + name);
         }
-        System.out.println(args.getOptionValues("k1").get(0));
+        final List<String> k1 = args.getOptionValues("k1");
+        if (k1 != null && !k1.isEmpty()) {
+            System.out.println(k1.get(0));
+        }
     }
 }
