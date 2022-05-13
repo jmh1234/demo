@@ -26,32 +26,33 @@ public class MultiThreadServer {
 
     public static void main(String[] args) throws IOException {
         Thread.currentThread().setName("Boss");
-        ServerSocketChannel ssc = ServerSocketChannel.open();
-        ssc.configureBlocking(false);
-        Selector selector = Selector.open();
-        ssc.register(selector, SelectionKey.OP_ACCEPT);
-        ssc.bind(new InetSocketAddress(8080));
+        try (ServerSocketChannel ssc = ServerSocketChannel.open()) {
+            ssc.configureBlocking(false);
+            Selector selector = Selector.open();
+            ssc.register(selector, SelectionKey.OP_ACCEPT);
+            ssc.bind(new InetSocketAddress(8080));
 
-        Worker[] workers = new Worker[Runtime.getRuntime().availableProcessors()];
-        for (int i = 0; i < workers.length; i++) {
-            workers[i] = new Worker("work-" + i);
-        }
+            Worker[] workers = new Worker[Runtime.getRuntime().availableProcessors()];
+            for (int i = 0; i < workers.length; i++) {
+                workers[i] = new Worker("work-" + i);
+            }
 
-        AtomicInteger number = new AtomicInteger();
-        while (true) {
-            selector.select();
-            final Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
-            while (iterator.hasNext()) {
-                final SelectionKey key = iterator.next();
-                if (key.isAcceptable()) {
-                    final SocketChannel sc = ssc.accept();
-                    sc.configureBlocking(false);
-                    final int execute = number.getAndIncrement() % workers.length;
-                    final Worker worker = workers[execute];
-                    worker.register(sc);
-                    sc.register(selector, SelectionKey.OP_READ);
+            AtomicInteger number = new AtomicInteger();
+            while (true) {
+                selector.select();
+                final Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                while (iterator.hasNext()) {
+                    final SelectionKey key = iterator.next();
+                    if (key.isAcceptable()) {
+                        final SocketChannel sc = ssc.accept();
+                        sc.configureBlocking(false);
+                        final int execute = number.getAndIncrement() % workers.length;
+                        final Worker worker = workers[execute];
+                        worker.register(sc);
+                        sc.register(selector, SelectionKey.OP_READ);
+                    }
+                    iterator.remove();
                 }
-                iterator.remove();
             }
         }
     }
@@ -60,11 +61,10 @@ public class MultiThreadServer {
      * 工作线程，负责数据的读
      */
     public static class Worker implements Runnable {
-        private String name;
-        private Thread thread;
+        private final String name;
         private Selector selector;
         private volatile boolean start = false;
-        private ConcurrentLinkedQueue<Runnable> queue = new ConcurrentLinkedQueue<>();
+        private final ConcurrentLinkedQueue<Runnable> queue = new ConcurrentLinkedQueue<>();
 
         public Worker(String name) {
             this.name = name;
@@ -79,7 +79,7 @@ public class MultiThreadServer {
         public void register(SocketChannel sc) throws IOException {
             if (!start) {
                 selector = Selector.open();
-                thread = new Thread(this, name);
+                Thread thread = new Thread(this, name);
                 thread.start();
                 start = true;
             }

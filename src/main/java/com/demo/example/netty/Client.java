@@ -1,9 +1,10 @@
 package com.demo.example.netty;
 
-import lombok.SneakyThrows;
+import com.demo.util.LoggerUtil;
+import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 
@@ -16,14 +17,13 @@ import java.nio.charset.Charset;
  */
 public class Client {
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        final SocketChannel sc = SocketChannel.open();
-        sc.connect(new InetSocketAddress("localhost", 8080));
-        final SocketAddress localAddress = sc.getLocalAddress();
-        sc.write(Charset.defaultCharset().encode("122"));
-        System.out.println("waiting...");
-//        sc.close();
-        System.in.read();
+    private static final Logger logger = LoggerUtil.getInstance(Client.class);
+
+    public static void main(String[] args) throws IOException {
+        try (SocketChannel sc = SocketChannel.open()) {
+            sc.connect(new InetSocketAddress("localhost", 8080));
+            sc.write(Charset.defaultCharset().encode("1221123121"));
+        }
+        logger.info("waiting...");
     }
 }
