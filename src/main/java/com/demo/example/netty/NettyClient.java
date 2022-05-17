@@ -1,6 +1,5 @@
 package com.demo.example.netty;
 
-import com.demo.util.LoggerUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,7 +10,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.slf4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.net.InetSocketAddress;
 import java.util.Scanner;
@@ -23,10 +22,8 @@ import java.util.Scanner;
  * @author Ji MingHao
  * @since 2022-05-16 09:13
  */
+@Log4j2
 public class NettyClient {
-
-    private static final Logger logger = LoggerUtil.getInstance(NettyClient.class);
-
     public static void main(String[] args) throws InterruptedException {
         final NioEventLoopGroup group = new NioEventLoopGroup();
         final ChannelFuture channelFuture = new Bootstrap()
@@ -45,8 +42,7 @@ public class NettyClient {
             try (Scanner scanner = new Scanner(System.in)) {
                 while (true) {
                     final String line = scanner.next();
-                    final boolean interrupted = Thread.currentThread().isInterrupted();
-                    if ("q".equals(line) || interrupted) {
+                    if ("q".equals(line)) {
                         channel.close();
                         break;
                     } else {
@@ -58,10 +54,10 @@ public class NettyClient {
         final Thread input = new Thread(runnable, "input");
         input.start();
 
-        ChannelFuture closeFuture = channel.closeFuture();
-        closeFuture.addListener((ChannelFutureListener) channelFuture1 -> {
-            logger.info("关闭之后...");
-            group.shutdownGracefully();
-        });
+        channel.closeFuture()
+                .addListener((ChannelFutureListener) channelFuture1 -> {
+                    log.info("关闭之后...");
+                    group.shutdownGracefully();
+                });
     }
 }

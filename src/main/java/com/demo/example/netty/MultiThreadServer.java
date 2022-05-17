@@ -1,7 +1,6 @@
 package com.demo.example.netty;
 
-import com.demo.util.LoggerUtil;
-import org.slf4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,11 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Ji MingHao
  * @since 2022-05-13 15:05
  */
+@Log4j2
 @SuppressWarnings("all")
 public class MultiThreadServer {
-
-    private static final Logger logger = LoggerUtil.getInstance(MultiThreadServer.class);
-
     public static void main(String[] args) throws IOException {
         Thread.currentThread().setName("Boss");
         try (ServerSocketChannel ssc = ServerSocketChannel.open()) {
@@ -114,7 +111,7 @@ public class MultiThreadServer {
                                 key.cancel();
                             } else {
                                 buffer.flip();
-                                logger.info(" ================>  " + Charset.defaultCharset().decode(buffer));
+                                log.info(" ================>  " + Charset.defaultCharset().decode(buffer));
                             }
                             iterator.remove();
                         }

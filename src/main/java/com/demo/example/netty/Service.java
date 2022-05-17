@@ -1,7 +1,6 @@
 package com.demo.example.netty;
 
-import com.demo.util.LoggerUtil;
-import org.slf4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -20,11 +19,9 @@ import java.util.Iterator;
  * @author Ji MingHao
  * @since 2022-05-13 10:13
  */
+@Log4j2
 @SuppressWarnings("all")
 public class Service {
-
-    private static final Logger logger = LoggerUtil.getInstance(Service.class);
-
     public static void main(String[] args) throws IOException {
         try (ServerSocketChannel ssc = ServerSocketChannel.open()) {
             ssc.configureBlocking(false);
@@ -52,7 +49,7 @@ public class Service {
                                 key.cancel();
                             } else {
                                 buffer.flip();
-                                logger.info(" ====1====> {}", Charset.defaultCharset().decode(buffer));
+                                log.info(" ====1====> {}", Charset.defaultCharset().decode(buffer));
                                 if (buffer.position() == buffer.limit()) {
                                     ByteBuffer newBuffer = ByteBuffer.allocate(buffer.capacity() << 1);
                                     buffer.flip();
@@ -86,7 +83,7 @@ public class Service {
                 for (int j = 0; j < length; j++) {
                     target.put(source.get());
                 }
-                logger.info(" ====2====> {}", Charset.defaultCharset().decode(target));
+                log.info(" ====2====> {}", Charset.defaultCharset().decode(target));
             }
         }
         source.compact();
