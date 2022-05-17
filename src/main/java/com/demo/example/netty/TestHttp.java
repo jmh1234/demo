@@ -38,15 +38,15 @@ public class TestHttp {
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
                 @Override
-                protected void initChannel(NioSocketChannel channel) throws Exception {
+                protected void initChannel(NioSocketChannel channel) {
                     channel.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
                     channel.pipeline().addLast(new HttpServerCodec());
                     channel.pipeline().addLast(new SimpleChannelInboundHandler<HttpRequest>() {
                         @Override
-                        protected void channelRead0(ChannelHandlerContext ctx, HttpRequest httpRequest) throws Exception {
-                            log.info(httpRequest.getUri());
+                        protected void channelRead0(ChannelHandlerContext ctx, HttpRequest httpRequest) {
+                            log.info(httpRequest.uri());
                             final DefaultFullHttpResponse response =
-                                    new DefaultFullHttpResponse(httpRequest.getProtocolVersion(), HttpResponseStatus.OK);
+                                    new DefaultFullHttpResponse(httpRequest.protocolVersion(), HttpResponseStatus.OK);
                             final byte[] bytes = "<h1>Hello, world1<h1>".getBytes();
                             response.content().writeBytes(bytes);
                             response.headers().setInt(CONTENT_LENGTH, bytes.length);
