@@ -1,10 +1,8 @@
 package com.demo.example.netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelInitializer;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
@@ -26,16 +24,25 @@ import java.util.Scanner;
 public class NettyClient {
     public static void main(String[] args) throws InterruptedException {
         final NioEventLoopGroup group = new NioEventLoopGroup();
-        final ChannelFuture channelFuture = new Bootstrap()
-                .group(group)
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<NioSocketChannel>() {
+        final Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(group);
+        bootstrap.channel(NioSocketChannel.class);
+        bootstrap.handler(new ChannelInitializer<NioSocketChannel>() {
+            @Override
+            protected void initChannel(NioSocketChannel channel) {
+                channel.pipeline().addLast(new StringEncoder());
+                channel.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
+                channel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                     @Override
-                    protected void initChannel(NioSocketChannel channel) {
-                        channel.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
-                        channel.pipeline().addLast(new StringEncoder());
+                    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                        final ByteBuf buffer = ctx.alloc().buffer(16);
+                        buffer.writeBytes(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
+                        ctx.writeAndFlush(buffer);
                     }
-                }).connect(new InetSocketAddress("localhost", 8080));
+                });
+            }
+        });
+        final ChannelFuture channelFuture = bootstrap.connect(new InetSocketAddress("localhost", 8080));
         final Channel channel = channelFuture.sync().channel();
 
         Runnable runnable = () -> {

@@ -6,6 +6,8 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.charset.Charset;
@@ -27,9 +29,11 @@ public class NettyService {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel channel) {
+                        channel.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
                         channel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                             @Override
                             public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+                                log.info(msg);
                                 ByteBuf byteBuf = (ByteBuf) msg;
                                 final String s = byteBuf.toString(Charset.defaultCharset());
                                 super.channelRead(ctx, s);
@@ -37,7 +41,7 @@ public class NettyService {
                         }).addLast(defaultEventLoopGroup, new ChannelInboundHandlerAdapter() {
                             @Override
                             public void channelRead(ChannelHandlerContext ctx, Object msg) {
-                                log.info("1: {}", msg);
+                                log.info("2: {}", msg);
                                 channel.writeAndFlush(ctx.alloc().buffer().writeBytes("aaaa".getBytes()));
                             }
                         });
@@ -46,7 +50,7 @@ public class NettyService {
                             public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
                                 ByteBuf byteBuf = (ByteBuf) msg;
                                 final String s = byteBuf.toString(Charset.defaultCharset());
-                                log.info("2: {}", s);
+                                log.info("3: {}", s);
                             }
                         });
                     }
