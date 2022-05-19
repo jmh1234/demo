@@ -13,7 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DemoApplication {
     public static void main(String... args) {
-        SpringApplication.run(DemoApplication.class, "--k1=v1", "--k1=v2");
+        String[] params = {"--k1=v1", "--k1=v2"};
+        SpringApplication.run(DemoApplication.class, params);
         System.out.println("================================= Spring Boot 启动成功！=================================");
     }
 }
