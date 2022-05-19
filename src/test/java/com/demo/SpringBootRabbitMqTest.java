@@ -1,6 +1,5 @@
 package com.demo;
 
-import com.DemoApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

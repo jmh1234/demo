@@ -1,6 +1,5 @@
 package com.demo.aspect;
 
-import com.demo.Test;
 import com.demo.annotation.Log;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -33,7 +32,7 @@ public class LogDecoratorByByteBuddy {
                 .method(ElementMatchers.isAnnotatedWith(Log.class))
                 .intercept(MethodDelegation.to(LoggerInterceptor.class))
                 .make()
-                .load(Test.class.getClassLoader())
+                .load(DecoratorMain.class.getClassLoader())
                 .getLoaded();
     }
 
