@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
   cloud:
     nacos:
       config:
@@ -20,6 +20,8 @@ spring:
       config:
         server-addr: 172.20.97.225:8848
         namespace: 74f9e713-818c-49f9-a0cd-580af3a89f4e
+        username: nacos
+        password: nacos
 ---
 
 #开发环境配置
@@ -30,3 +32,5 @@ spring:
       config:
         server-addr: 172.20.97.225:8848
         namespace: 74f9e713-818c-49f9-a0cd-580af3a89f4e
+        username: nacos
+        password: nacos
