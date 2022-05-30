@@ -1,29 +1,27 @@
 #! /bin/bash
 
-# 开始执行部署PN-9900程序
-echo -e "\e[1;32m开始部署PN-9900程序 \e[0m"
+# 部署Portainer
+echo -e "\e[1;32m开始部署Portainer \e[0m"
 
-# 获取认证结果
-resultJWT=$(curl --location --request POST 'http://127.0.0.1:9000/api/auth' --header 'Content-Type: text/plain' --data '{  "password": "Pn123456",  "username": "admin"}')
-echo $resultJWT
-# 解析json
-parse_json() {
-  echo "${1//\"/}" | sed "s/.*$2:\([^,}]*\).*/\1/"
-}
+# 执行指令
+docker run -d -p 9001:9000 --restart=always --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v /njpn/PN-9900/deploy/portainer/data:/data portainer/portainer
 
-# 获取token认证
-value=$(parse_json $resultJWT "jwt")
-# 获取compose.yml文件内容并转义换行符
+# 拷贝portainer文件
+tar -zxvf /njpn/PN-9900/install/portainer.tar.gz -C /njpn/PN-9900/deploy/
 
+# 拷贝nginx文件
+tar -zxvf /njpn/PN-9900/install/nginx.tar.gz -C /njpn/PN-9900/deploy/
 
-echo -e "\e[1;32m开始执行base脚本 \e[0m"
-result6=$(sed s/$/"\\\n"/ /njpn/PN-9900/deploy/portainer/data/compose/6/docker-compose.yml | tr -d '\n')
-echo "curl --location --request PUT -w %{http_code} 'http://127.0.0.1:9000/api/stacks/6?endpointId=1' --header 'Authorization: Bearer ${value}' --header 'Content-Type: applic
-ation/json' --data '{ \"id\": 6, \"StackFileContent\": \"${result6}\",\"Env\": [],\"Prune\": false }'" | sh
-if [ $? -eq 0 ]; then
-  echo -e "\e[1;32m执行base脚本成功 \e[0m"
-else
-  echo -e "\e[1;31m执行base脚本失败 \e[0m"
-  exit 1
-fi
-# sleep 60
+# 拷贝mysql_cnf文件
+tar -zxvf /njpn/PN-9900/install/mysql_cnf.tar.gz -C /njpn/PN-9900/deploy/
+
+# 拷贝nginx_mqtt文件
+tar -zxvf /njpn/PN-9900/install/nginx_mqtt.tar.gz -C /njpn/PN-9900/deploy/
+
+# 拷贝nginx_cluster文件
+tar -zxvf /njpn/PN-9900/install/nginx_cluster.tar.gz -C /njpn/PN-9900/deploy/
+
+# 拷贝emqx文件
+tar -zxvf /njpn/PN-9900/install/emqx.tar.gz -C /njpn/PN-9900/deploy/
+
+echo -e "\e[1;32m部署Portainer成功 \e[0m"
