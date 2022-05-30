@@ -27,4 +27,12 @@ else
   exit 1
 fi
 
+sleep 60
+
+# 恢复nacos配置的数据
+echo -e "\e[1;32m恢复nacos配置的数据 \e[0m"
+docker cp /njpn/PN-9900/scripts/sql/nacos.sql nacos-mysql:/tmp/nacos.sql
+docker exec nacos-mysql bash -c "/usr/bin/mysql -hlocalhost -P3306 -unacos -pnacos nacos_devtest < /tmp/nacos.sql"
+docker exec nacos-mysql rm -rf /tmp/nacos.sql
+
 echo -e "\e[1;32m部署PN-9900基础依赖服务程序成功 \e[0m"
