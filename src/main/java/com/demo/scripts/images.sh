@@ -8,8 +8,6 @@ cd ${HOME}
 
 tar -zxvf images.tar.gz -C $HOME
 
-pwd
-
 # 加载镜像
 # 1. 安装mysql
 docker load -i images/mysql.tar

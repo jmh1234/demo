@@ -3,6 +3,14 @@
 # 开始执行部署PN-9900程序
 echo -e "\e[1;32m开始部署PN-9900应用服务程序 \e[0m"
 
+HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd ${HOME}
+
+cd ../../deploy
+
+# 获取当前路径
+CURRENT_PATH=$(pwd)
+
 # 获取认证结果
 resultJWT=$(curl --location --request POST 'http://127.0.0.1:9001/api/auth' --header 'Content-Type: text/plain' --data '{  "password": "Pn123456",  "username": "admin"}')
 echo $resultJWT
@@ -17,7 +25,7 @@ value=$(parse_json $resultJWT "jwt")
 # 获取compose.yml文件内容并转义换行符
 
 echo -e "\e[1;32m开始执行PN-9900应用脚本 \e[0m"
-result=$(sed s/$/"\\\n"/ /njpn/PN-9900/deploy/portainer/data/compose/1/docker-compose.yml | tr -d '\n')
+result=$(sed s/$/"\\\n"/ $CURRENT_PATH/portainer/data/compose/1/docker-compose.yml | tr -d '\n')
 
 echo "curl --location --request PUT -w %{http_code} 'http://127.0.0.1:9001/api/stacks/1?endpointId=1' --header 'Authorization: Bearer ${value}' --header 'Content-Type: application/json' --data '{ \"id\": 1, \"StackFileContent\": \"${result}\",\"Env\": [],\"Prune\": false }'" | sh
 if [ $? -eq 0 ]; then
