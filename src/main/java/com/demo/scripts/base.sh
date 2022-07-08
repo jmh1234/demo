@@ -43,7 +43,7 @@ sleep 60
 # 恢复nacos配置的数据
 cd ${HOME}
 echo -e "\e[1;32m恢复nacos配置的数据 \e[0m"
-docker cp sql/nacos.sql nacos-mysql:/tmp/nacos.sql
+docker cp initSql/nacos.sql nacos-mysql:/tmp/nacos.sql
 docker exec nacos-mysql bash -c "/usr/bin/mysql -hlocalhost -P3306 -unacos -pnacos nacos_devtest < /tmp/nacos.sql"
 docker exec nacos-mysql rm -rf /tmp/nacos.sql
 
@@ -51,7 +51,7 @@ sleep 60
 
 # 恢复mysql数据
 echo -e "\e[1;32m开始恢复pn9900数据 \e[0m"
-docker cp sql/pn_9900.sql mysql:/tmp/pn_9900.sql
+docker cp initSql/pn_9900.sql mysql:/tmp/pn_9900.sql
 docker exec mysql bash -c "/usr/bin/mysql -hlocalhost -P5236 -uroot -pPn123456 -f pn9900 < /tmp/pn_9900.sql"
 docker exec mysql rm -rf /tmp/pn_9900.sql
 echo -e "\e[1;32mpn9900数据恢复成功 \e[0m"
