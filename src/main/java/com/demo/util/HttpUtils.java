@@ -35,6 +35,9 @@ public class HttpUtils {
 
     private static final int TWO_HUNDRED = 200;
     private static final int THREE_HUNDRED = 300;
+
+    private static final String KEY_ID = "2424";
+    private static final String KEY_SECRET = "6680182547";
     private static final String REQUEST_IP_PORT_INFO = "https://www.ginlongcloud.com:13333";
 
     private HttpUtils() {
@@ -44,24 +47,22 @@ public class HttpUtils {
     /**
      * 发送httpPost请求
      *
-     * @param keyId     访问者身份 ID
-     * @param keySecret 签名所需的密钥
-     * @param request   请求的接口名称
-     * @param body      请求体
+     * @param request 请求的接口名称
+     * @param body    请求体
      * @return http请求结果
      * @throws InvalidKeyException      InvalidKeyException
      * @throws NoSuchAlgorithmException NoSuchAlgorithmException
      * @throws IOException              IOException
      */
-    public static String senPostRequest(String keyId, String keySecret, String request, String body) throws InvalidKeyException, NoSuchAlgorithmException, IOException {
+    public static String sendPostRequest(String request, String body) throws InvalidKeyException, NoSuchAlgorithmException, IOException {
         final String date = getGmtTime();
         final String contentMd5 = getDigest(body);
         String encryptText = "POST\n" + contentMd5 + "\napplication/json\n" + date + "\n" + request;
-        final String sign = HttpUtils.hMacSha1Encrypt(encryptText, keySecret);
+        final String sign = HttpUtils.hMacSha1Encrypt(encryptText, KEY_SECRET);
         String url = REQUEST_IP_PORT_INFO + request;
         HttpPost httpPost = new HttpPost(url);
         httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
-        String authorization = "API " + keyId + ":" + sign;
+        String authorization = "API " + KEY_ID + ":" + sign;
         return HttpUtils.executeHttpRequest(httpPost, authorization);
     }
 
