@@ -1,6 +1,8 @@
 package com.demo.util;
 
-import lombok.extern.log4j.Log4j2;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -18,10 +20,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,15 +29,11 @@ import java.util.TimeZone;
  * @author cheng sn
  * @since 2021-04-15 16:10
  */
-@Log4j2
 public class HttpUtils {
 
-    private static final int TWO_HUNDRED = 200;
-    private static final int THREE_HUNDRED = 300;
-
-    private static final String KEY_ID = "2424";
-    private static final String KEY_SECRET = "6680182547";
-    private static final String REQUEST_IP_PORT_INFO = "https://www.ginlongcloud.com:13333";
+    private static final String KEY_ID = "1300319277300425948";
+    private static final String KEY_SECRET = "be19b863fe06420a8a730e8bc04f265f";
+    private static final String REQUEST_IP_PORT_INFO = "https://api.ginlong.com:13333";
 
     private HttpUtils() {
 
@@ -63,7 +58,25 @@ public class HttpUtils {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setEntity(new StringEntity(body, StandardCharsets.UTF_8));
         String authorization = "API " + KEY_ID + ":" + sign;
-        return HttpUtils.executeHttpRequest(httpPost, authorization);
+        return HttpUtils.executeHttpRequest(httpPost, authorization, contentMd5, date);
+    }
+
+    /**
+     * 将http的返回报文转化为实体类对象
+     *
+     * @param content https请求内容
+     * @param clazz   实体类
+     * @param <T>     范型
+     * @return 处理后的数据
+     */
+    public static <T> List<T> handleResponseMessage(String content, Class<T> clazz) {
+        final JSONObject jsonObject = JSON.parseObject(content);
+        final JSONArray records = jsonObject.getJSONObject("data").getJSONObject("page").getJSONArray("records");
+        List<T> resultList = new ArrayList<>();
+        for (Object object : records) {
+            resultList.add(JSON.toJavaObject(JSON.parseObject(JSON.toJSONString(object)), clazz));
+        }
+        return resultList;
     }
 
     /**
@@ -80,15 +93,16 @@ public class HttpUtils {
 
     /**
      * 1.先计算MD5加密的二进制数组(128位)。
-     * 2. 再对这个二进制进行 base64 编码(而不是对 32 位字符串编码) * @param plainText 加密明文
+     * 2.再对这个二进制进行 base64 编码(而不是对 32 位字符串编码)
      *
+     * @param plainText 加密明文
      * @return 加密密文
      */
-    public static String getDigest(String test) {
+    public static String getDigest(String plainText) {
         String result = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(test.getBytes());
+            md.update(plainText.getBytes());
             byte[] b = md.digest();
             final byte[] encode = Base64.getEncoder().encode(b);
             result = new String(encode);
@@ -122,26 +136,20 @@ public class HttpUtils {
      *
      * @param httpPost      httpPost对象
      * @param authorization 签名
+     * @param contentMd5    加密密文
+     * @param date          日期
      * @return http执行结果
      * @throws IOException IOException
      */
-    public static String executeHttpRequest(HttpPost httpPost, String authorization) throws IOException {
-        String result = "!200";
+    public static String executeHttpRequest(HttpPost httpPost, String authorization, String contentMd5, String date) throws IOException {
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.addHeader("Authorization", authorization);
+        httpPost.addHeader("Content-MD5", contentMd5);
+        httpPost.addHeader("Date", date);
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
              CloseableHttpResponse response = httpClient.execute(httpPost)) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            log.info("请求状态码: {}", statusCode);
-            if (statusCode >= TWO_HUNDRED && statusCode < THREE_HUNDRED) {
-                HttpEntity responseEntity = response.getEntity();
-                if (responseEntity != null) {
-                    result = EntityUtils.toString(responseEntity);
-                } else {
-                    result = "204 No Content";
-                }
-            }
+            HttpEntity responseEntity = response.getEntity();
+            return EntityUtils.toString(responseEntity);
         }
-        return result;
     }
 }
