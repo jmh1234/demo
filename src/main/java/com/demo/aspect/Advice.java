@@ -89,6 +89,9 @@ public class Advice {
                 result = cache;
             } else {
                 result = process.proceed();
+                if (result == null) {
+                    return null;
+                }
                 stringRedisTemplate.opsForValue().set(sigMethod.getName(), result.toString());
             }
             long endTime = System.currentTimeMillis();

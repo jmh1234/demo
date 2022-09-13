@@ -1,7 +1,9 @@
 package com.demo;
 
+import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Ji MingHao
  * @since 2022-04-29 13:34
  */
+@EnableSwagger2
+@EnableSwaggerBootstrapUI
 @SpringBootApplication
 public class DemoApplication {
     public static void main(String... args) {

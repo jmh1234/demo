@@ -11,12 +11,18 @@ import com.demo.entity.User;
 import com.demo.service.UserService;
 import com.demo.util.LoggerUtil;
 import com.demo.util.Utils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiOperationSupport;
+import io.swagger.annotations.ApiSort;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -37,6 +43,8 @@ import java.util.Map;
  * @author Ji MingHao
  * @since 2022-04-29 13:34
  */
+@Api(tags = "1 - 接口测试")
+@ApiSort(value = 1)
 @RestController
 public class TestBootController {
 
@@ -47,9 +55,11 @@ public class TestBootController {
     @Resource
     private UserService userService;
 
-    @RequestMapping("/showUser")
+    @GetMapping("/showUser")
     @ResponseBody
     @AdviceAspect(description = "我只是想获得用户的信息")
+    @ApiOperation(value = "1 - 获得用户信息")
+    @ApiOperationSupport(order = 1)
     public RespJson showUserInfo(HttpServletRequest request) {
         try {
             String id = request.getParameter("id");
@@ -66,9 +76,11 @@ public class TestBootController {
         }
     }
 
-    @RequestMapping("/addUserInfo")
+    @GetMapping("/addUserInfo")
     @ResponseBody
     @AdviceAspect(description = "我只是想批量加点用户的信息")
+    @ApiOperation(value = "2 - 批量添加用户信息")
+    @ApiOperationSupport(order = 2)
     public void addUserInfo() {
         try {
             String address = "addr-abcd";
@@ -84,9 +96,11 @@ public class TestBootController {
         }
     }
 
-    @RequestMapping("/sendMsg2Server")
+    @PostMapping("/sendMsg2Server")
     @ResponseBody
     @AdviceAspect(description = "我只是想向服务器发送一条消息")
+    @ApiOperation(value = "3 - 向服务器发送一条消息")
+    @ApiOperationSupport(order = 3)
     public RespJson sendMsg2Server(HttpServletRequest request) {
         try {
             String url = "http://localhost:8088/callback";
@@ -111,9 +125,11 @@ public class TestBootController {
         }
     }
 
-    @RequestMapping("/callback")
+    @PostMapping("/callback")
     @ResponseBody
     @AdviceAspect(description = "我只是服务器回复的一条消息")
+    @ApiOperation(value = "4 - 服务器回复的一条消息")
+    @ApiOperationSupport(order = 4)
     public void callback(HttpServletResponse response, HttpEntity<byte[]> requestEntity) {
         try {
             // 请求接收传递过来的参数
@@ -135,5 +151,25 @@ public class TestBootController {
     private void output(HttpServletResponse response, JSONObject jsonObject) throws IOException {
         response.getOutputStream().write(jsonObject.toJSONString().getBytes());
         response.getOutputStream().flush();
+    }
+
+    @Resource
+    RestHighLevelClient elasticsearchClient;
+
+    @PostMapping("/addIndex")
+    @ResponseBody
+    @AdviceAspect(description = "添加索引")
+    @ApiOperation(value = "5 - 添加索引")
+    @ApiOperationSupport(order = 5)
+    public void addIndex(HttpServletResponse response) {
+        try {
+            logger.info("数据接收成功! 接收的数据为: {}", elasticsearchClient);
+            JSONObject outObj = new JSONObject();
+            outObj.put("res_code", "0");
+            outObj.put("res_msg", "SUCCESS");
+            output(response, outObj);
+        } catch (Exception e) {
+            logger.error(LoggerUtil.handleException(e));
+        }
     }
 }

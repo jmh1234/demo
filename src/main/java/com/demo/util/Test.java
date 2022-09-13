@@ -16,12 +16,13 @@ import java.util.List;
 public class Test {
 
     public static void main(String[] args) {
-        String request = "/v1/api/userStationList";
+        String request = "/v1/api/inveterList";
         try {
             RequestBody requestBody = new RequestBody();
             requestBody.setPageNo(1);
             requestBody.setPageSize(10);
             final String response = HttpUtils.sendPostRequest(request, JSON.toJSONString(requestBody));
+            System.out.println(response);
             final List<StationStatusVo> stationStatusVos = HttpUtils.handleResponseMessage(response, StationStatusVo.class);
             for (StationStatusVo stationStatusVo : stationStatusVos) {
                 System.out.println(stationStatusVo.getId());
